@@ -40,14 +40,23 @@ enregistrées dans le `.model3` sans le rendre invalide, mais l'ancien modeleur 
 ### Depuis le code source
 
 1. Télécharger ce dépôt (bouton *Code → Download ZIP*).
-2. Dans QGIS : *Extensions → Installer/Gérer les extensions → Installer depuis un ZIP*.
-   Le dossier du plugin doit s'appeler `modeler_evo` : renommer le dossier contenu dans le ZIP
-   si nécessaire.
-3. Cocher les extensions expérimentales dans les paramètres du gestionnaire d'extensions, puis
+2. Décompresser l'archive et renommer le dossier `QGIS-ModelerEvo-main` en `modeler_evo`, puis
+   le recompresser en ZIP (le dossier du plugin **doit** s'appeler `modeler_evo`).
+3. Dans QGIS : *Extensions → Installer/Gérer les extensions → Installer depuis un ZIP*.
+4. Cocher les extensions expérimentales dans les paramètres du gestionnaire d'extensions, puis
    activer **ModelerEvo**.
 
-Vous pouvez aussi cloner le dépôt directement dans le dossier des plugins de votre profil QGIS
-(`…/profiles/default/python/plugins/modeler_evo`).
+Vous pouvez aussi cloner le dépôt directement dans le dossier des plugins de votre profil QGIS :
+
+```bash
+cd …/profiles/default/python/plugins
+git clone https://github.com/naub1n/QGIS-ModelerEvo.git modeler_evo
+```
+
+## Signaler un problème
+
+Les anomalies et suggestions sont à déposer dans les
+[issues](https://github.com/naub1n/QGIS-ModelerEvo/issues).
 
 ## Utilisation
 

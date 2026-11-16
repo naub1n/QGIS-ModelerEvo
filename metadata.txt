@@ -16,6 +16,6 @@ license=GPL-3.0-or-later
 changelog=
     0.1.0 - Première version expérimentale : noeuds redimensionnables, points d'accroche typés, flèches directes / expressions / dépendances, commentaires, cadres de groupe, aide par noeud, sorties étendues [Evo], thème sombre, exports image / PDF / SVG / Python, compatibilité QGIS 3.34 à 4.x (Qt5 / Qt6)
 tags=processing,modeler,model,graphical,workflow
-homepage=https://github.com/
-repository=https://github.com/
-tracker=https://github.com/
+homepage=https://github.com/naub1n/QGIS-ModelerEvo
+repository=https://github.com/naub1n/QGIS-ModelerEvo
+tracker=https://github.com/naub1n/QGIS-ModelerEvo/issues
