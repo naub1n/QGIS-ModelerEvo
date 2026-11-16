@@ -8,6 +8,7 @@ from qgis.core import QgsApplication
 from qgis.PyQt.QtWidgets import QMenu
 
 from .gui.icons import plugin_icon
+from .i18n import remove_translator, tr
 
 MENU = "ModelerEvo"
 
@@ -22,9 +23,9 @@ class ModelerEvoPlugin:
 
     def initGui(self):  # noqa: N802
         self.action_new = QAction(plugin_icon(), "ModelerEvo…", self.iface.mainWindow())
-        self.action_new.setToolTip("Ouvrir ModelerEvo (nouveau modèle)")
+        self.action_new.setToolTip(tr("Open ModelerEvo (new model)"))
         self.action_new.triggered.connect(self.new_model)
-        self.action_open = QAction(plugin_icon(), "Ouvrir un modèle dans ModelerEvo…",
+        self.action_open = QAction(plugin_icon(), tr("Open a model in ModelerEvo…"),
                                    self.iface.mainWindow())
         self.action_open.triggered.connect(self.open_model)
         self.actions = [self.action_new, self.action_open]
@@ -61,7 +62,7 @@ class ModelerEvoPlugin:
 
         class EditWithEvoAction(QgsProcessingToolboxContextAction):
             def __init__(self):
-                super().__init__("Éditer avec ModelerEvo…")
+                super().__init__(tr("Edit with ModelerEvo…"))
 
             def icon(self):
                 return plugin_icon()
@@ -89,7 +90,7 @@ class ModelerEvoPlugin:
         class EditWithEvoAction(ContextAction):
             def __init__(self):
                 super().__init__()
-                self.name = "Éditer avec ModelerEvo…"
+                self.name = tr("Edit with ModelerEvo…")
 
             def icon(self):
                 return plugin_icon()
@@ -141,6 +142,7 @@ class ModelerEvoPlugin:
         if self.processing_menu is not None:
             self.processing_menu.removeAction(self.action_new)
         self.actions = []
+        remove_translator()
 
     def _window(self):
         from .gui.main_window import ModelerWindow

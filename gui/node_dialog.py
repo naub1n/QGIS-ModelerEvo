@@ -26,6 +26,7 @@ except ImportError:  # pragma: no cover
     iface = None
 
 
+from ..i18n import tr  # noqa: E402
 from .icons import EVO_COLOR, EVO_TEXT  # noqa: E402
 
 
@@ -74,10 +75,10 @@ def _main_tab_widget(dlg):
 def _help_editor(text):
     editor = QTextEdit()
     editor.setAcceptRichText(False)
-    editor.setPlaceholderText(
-        "Aide spécifique à ce noeud (texte ou HTML).\n"
-        "Elle est affichée au survol du noeud et reprise dans l'aide du modèle "
-        "lorsqu'un utilisateur l'ouvre.")
+    editor.setPlaceholderText(tr(
+        "Help specific to this node (text or HTML).\n"
+        "It is shown when hovering over the node and included in the model help "
+        "when a user opens the model."))
     editor.setPlainText(text or "")
     return editor
 
@@ -91,18 +92,18 @@ def install_tabs(dlg, help_text):
     tabs = _main_tab_widget(dlg)
     if tabs is not None:
         if tabs.count() >= 1:
-            tabs.setTabText(0, "Propriétés")
+            tabs.setTabText(0, tr("Properties"))
         if tabs.count() >= 2:
-            tabs.setTabText(1, "Commentaires")
+            tabs.setTabText(1, tr("Comments"))
         page = QWidget()
         lay = QVBoxLayout(page)
-        info = QLabel("Cette aide s'affiche au survol du noeud et dans la fenêtre du modèle.")
+        info = QLabel(tr("This help is shown when hovering over the node and in the model window."))
         info.setWordWrap(True)
         lay.addWidget(info)
         lay.addWidget(editor)
-        tabs.addTab(page, "Aide")
+        tabs.addTab(page, tr("Help"))
     else:
-        box = QGroupBox("Aide")
+        box = QGroupBox(tr("Help"))
         QVBoxLayout(box).addWidget(editor)
         layout = dlg.layout()
         if layout is not None:
@@ -204,7 +205,7 @@ def edit_output(parent, description, source, comment="", comment_color=None, hel
     Retourne (description, commentaire, couleur, aide) ou None si annulé.
     """
     dlg = QDialog(parent)
-    dlg.setWindowTitle("Sortie du modèle")
+    dlg.setWindowTitle(tr("Model output"))
     lay = QVBoxLayout(dlg)
     tabs = QTabWidget()
     lay.addWidget(tabs)
@@ -212,16 +213,16 @@ def edit_output(parent, description, source, comment="", comment_color=None, hel
     props = QWidget()
     form = QFormLayout(props)
     name_edit = QLineEdit(description)
-    form.addRow("Description", name_edit)
+    form.addRow(tr("Description"), name_edit)
     src_label = QLabel(source)
     src_label.setWordWrap(True)
-    form.addRow("Source", src_label)
+    form.addRow(tr("Source"), src_label)
     if evo_only:
-        note = QLabel(f"<b style='color:{EVO_COLOR}'>Evo</b> — {EVO_TEXT}.<br/>Cette sortie n'est lisible "
-                      "que dans ModelerEvo (l'ancien modeleur l'ignore).")
+        note = QLabel(f"<b style='color:{EVO_COLOR}'>Evo</b> — {EVO_TEXT}.<br/>"
+                      + tr("This output can only be read by ModelerEvo (the original modeler ignores it)."))
         note.setWordWrap(True)
         form.addRow(note)
-    tabs.addTab(props, "Propriétés")
+    tabs.addTab(props, tr("Properties"))
 
     com = QWidget()
     clay = QVBoxLayout(com)
@@ -236,14 +237,14 @@ def edit_output(parent, description, source, comment="", comment_color=None, hel
     else:
         color_btn.setColor(QColor("#fff4b8"))
     clay.addWidget(color_btn)
-    tabs.addTab(com, "Commentaires")
+    tabs.addTab(com, tr("Comments"))
 
     help_page = QWidget()
     hlay = QVBoxLayout(help_page)
-    hlay.addWidget(QLabel("Cette aide s'affiche au survol du noeud et dans la fenêtre du modèle."))
+    hlay.addWidget(QLabel(tr("This help is shown when hovering over the node and in the model window.")))
     editor = _help_editor(help_text)
     hlay.addWidget(editor)
-    tabs.addTab(help_page, "Aide")
+    tabs.addTab(help_page, tr("Help"))
 
     if comment_tab:
         tabs.setCurrentIndex(1)

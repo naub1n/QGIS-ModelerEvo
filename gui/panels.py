@@ -15,6 +15,7 @@ from qgis.PyQt.QtWidgets import (
 )
 
 from ..core.model_utils import CATEGORY_LABELS, category
+from ..i18n import tr
 from .icons import gear_icon, input_type_icon
 from .scene import ALG_MIME, PARAM_MIME
 
@@ -74,7 +75,7 @@ class InputsPanel(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.search = _search_box("Rechercher une entrée…")
+        self.search = _search_box(tr("Search inputs…"))
         self.tree = _MimeTree()
         lay = QVBoxLayout(self)
         lay.setContentsMargins(4, 4, 4, 4)
@@ -167,7 +168,7 @@ class AlgorithmsPanel(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.search = _search_box("Rechercher un algorithme…")
+        self.search = _search_box(tr("Search algorithms…"))
         lay = QVBoxLayout(self)
         lay.setContentsMargins(4, 4, 4, 4)
         lay.addWidget(self.search)
@@ -261,7 +262,7 @@ class AlgorithmsPanel(QWidget):
                 if self._is_parameter_index(proxy, proxy.index(0, 0, top)):
                     self.tree.setRowHidden(row, root, True)
         except Exception as e:  # noqa: BLE001
-            QgsMessageLog.logMessage(f"Masquage des entrées impossible : {e}", "ModelerEvo")
+            QgsMessageLog.logMessage(tr("Cannot hide the inputs group: {0}").format(e), "ModelerEvo")
 
     def _native_double_clicked(self, _index):
         alg = self.tree.selectedAlgorithm()
@@ -320,12 +321,12 @@ class PropertiesPanel(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.name = QLineEdit()
-        self.name.setPlaceholderText("Nom du modèle (obligatoire)")
+        self.name.setPlaceholderText(tr("Model name (required)"))
         self.group = QLineEdit()
-        self.group.setPlaceholderText("Groupe dans la boîte à outils")
+        self.group.setPlaceholderText(tr("Group in the Processing Toolbox"))
         form = QFormLayout(self)
-        form.addRow("Nom", self.name)
-        form.addRow("Groupe", self.group)
+        form.addRow(tr("Name"), self.name)
+        form.addRow(tr("Group"), self.group)
 
     def set_values(self, name, group):
         for edit, value in ((self.name, name), (self.group, group)):
@@ -347,7 +348,7 @@ class VariablesPanel(QWidget):
         self.editor.scopeChanged.connect(self.changed)
 
     def set_variables(self, variables):
-        scope = QgsExpressionContextScope("Variables du modèle")
+        scope = QgsExpressionContextScope(tr("Model variables"))
         for k, v in (variables or {}).items():
             scope.setVariable(k, v)
         ctx = QgsExpressionContext()

@@ -15,6 +15,7 @@ from qgis.PyQt.QtWidgets import (
 )
 
 from ..core import model_utils as mu
+from ..i18n import tr
 
 _ROLE = Qt.ItemDataRole.UserRole
 
@@ -22,7 +23,7 @@ _ROLE = Qt.ItemDataRole.UserRole
 class ModelHelpDialog(QDialog):
     def __init__(self, model, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Aide du modèle")
+        self.setWindowTitle(tr("Model help"))
         self.resize(980, 620)
         self.model = model
         self.values = {}
@@ -47,23 +48,23 @@ class ModelHelpDialog(QDialog):
             self.list.addItem(it)
             self.values[key] = mu.help_value(model, key)
 
-        section("Modèle")
+        section(tr("Model"))
         for key, label in mu.HELP_KEYS:
             entry(key, label)
         params = [p for p in model.parameterDefinitions()
                   if not p.isDestination() and not mu.param_has_flag(p, "Hidden")]
         if params:
-            section("Entrées")
+            section(tr("Inputs"))
             for p in params:
                 entry(p.name(), p.description())
         outs = model.outputDefinitions()
         if outs:
-            section("Sorties")
+            section(tr("Outputs"))
             for o in outs:
                 entry(o.name(), o.description())
         children = model.childAlgorithms()
         if children:
-            section("Étapes (onglet « Aide » des algorithmes)")
+            section(tr("Steps (“Help” tab of the algorithms)"))
             for cid, child in sorted(children.items(), key=lambda kv: kv[1].description().lower()):
                 entry(mu.STEP_PREFIX + cid, child.description())
 
@@ -74,9 +75,9 @@ class ModelHelpDialog(QDialog):
         right = QWidget()
         rv = QVBoxLayout(right)
         rv.setContentsMargins(0, 0, 0, 0)
-        rv.addWidget(QLabel("Texte (HTML accepté)"))
+        rv.addWidget(QLabel(tr("Text (HTML allowed)")))
         rv.addWidget(self.editor, 1)
-        rv.addWidget(QLabel("Aperçu de l'aide du modèle"))
+        rv.addWidget(QLabel(tr("Model help preview")))
         rv.addWidget(self.preview, 2)
         split = QSplitter()
         split.addWidget(left)

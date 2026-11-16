@@ -19,6 +19,7 @@ from qgis.PyQt.QtGui import (
 )
 
 from ..core.model_utils import category
+from ..i18n import tr
 
 PLUGIN_ICON = os.path.join(os.path.dirname(os.path.dirname(__file__)), "icons", "icon.svg")
 
@@ -230,4 +231,4 @@ def plugin_icon():
 # Fonctionnalités propres à ModelerEvo, non compatibles avec le modeleur d'origine :
 # toujours signalées par le badge « Evo » (couleur EVO_COLOR) et ce texte.
 EVO_COLOR = "#7e57c2"
-EVO_TEXT = "Fonctionnalité de ModelerEvo, non compatible avec le modeleur d'origine"
+EVO_TEXT = tr("ModelerEvo feature, not compatible with the original modeler")

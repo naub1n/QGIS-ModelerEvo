@@ -19,6 +19,8 @@ from qgis.core import (
     QgsProperty,
 )
 
+from ..i18n import tr
+
 # --------------------------------------------------------------------------
 # Compatibilité des énumérations (QGIS 3.3x / QGIS 4)
 # --------------------------------------------------------------------------
@@ -83,14 +85,14 @@ _CATEGORIES = {
 _TYPE_TO_CATEGORY = {t: cat for cat, types in _CATEGORIES.items() for t in types}
 
 CATEGORY_LABELS = {
-    "boolean": "Booléen",
-    "enum": "Énumération",
-    "numeric": "Numérique",
-    "text": "Texte",
-    "vector": "Vecteur / géométrie",
-    "raster": "Raster",
-    "file": "Fichier / dossier",
-    "other": "Autre",
+    "boolean": tr("Boolean"),
+    "enum": tr("Enumeration"),
+    "numeric": tr("Numeric"),
+    "text": tr("Text"),
+    "vector": tr("Vector / geometry"),
+    "raster": tr("Raster"),
+    "file": tr("File / folder"),
+    "other": tr("Other"),
 }
 
 
@@ -247,12 +249,12 @@ def format_value(value, param=None):
                 labels.append(str(v))
         return ", ".join(labels)
     if isinstance(value, bool):
-        return "Oui" if value else "Non"
+        return tr("Yes") if value else tr("No")
     if isinstance(value, (list, tuple)):
         return ", ".join(format_value(v) for v in value)
     text = str(value)
     if text == "TEMPORARY_OUTPUT":
-        return "Temporaire"
+        return tr("Temporary")
     return text
 
 
@@ -392,13 +394,13 @@ _MARK_END = "<!-- /modeler_evo:steps -->"
 _MARK_RE = re.compile(re.escape(_MARK_START) + r".*?" + re.escape(_MARK_END), re.S)
 
 HELP_KEYS = (
-    ("ALG_DESC", "Description du modèle"),
-    ("EXAMPLES", "Exemples"),
-    ("ALG_CREATOR", "Auteur de l'algorithme"),
-    ("ALG_HELP_CREATOR", "Auteur de l'aide"),
-    ("ALG_VERSION", "Version"),
-    ("SHORT_DESCRIPTION", "Description courte"),
-    ("HELP_URL", "URL de l'aide"),
+    ("ALG_DESC", tr("Model description")),
+    ("EXAMPLES", tr("Examples")),
+    ("ALG_CREATOR", tr("Algorithm author")),
+    ("ALG_HELP_CREATOR", tr("Help author")),
+    ("ALG_VERSION", tr("Version")),
+    ("SHORT_DESCRIPTION", tr("Short description")),
+    ("HELP_URL", tr("Help URL")),
 )
 
 
@@ -516,9 +518,9 @@ def sync_help(model):
     if steps or outs:
         block = f"{_MARK_START}"
         if steps:
-            block += f"<h3>Étapes du modèle</h3><ul>{''.join(steps)}</ul>"
+            block += f"<h3>{tr('Model steps')}</h3><ul>{''.join(steps)}</ul>"
         if outs:
-            block += f"<h3>Sorties du modèle</h3><ul>{''.join(outs)}</ul>"
+            block += f"<h3>{tr('Model outputs')}</h3><ul>{''.join(outs)}</ul>"
         block += _MARK_END
         desc = (desc + "\n" if desc else "") + block
     if desc:

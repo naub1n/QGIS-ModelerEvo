@@ -35,6 +35,18 @@ enregistrées dans le `.model3` sans le rendre invalide, mais l'ancien modeleur 
 - QGIS 3.34 à 4.x
 - Qt5 et Qt6
 
+## Langues
+
+L'interface suit la langue de QGIS : **français** et **anglais** (langue par défaut pour toute autre
+langue). Les traductions sont des fichiers Qt Linguist dans `i18n/`. Pour en ajouter une, par exemple
+l'allemand :
+
+```bash
+python3 tools/update_translations.py --add de   # crée i18n/modeler_evo_de.ts
+linguist i18n/modeler_evo_de.ts                 # traduire (ou éditer le .ts directement)
+python3 tools/update_translations.py            # compile le .qm
+```
+
 ## Installation
 
 ### Depuis une release (recommandé)

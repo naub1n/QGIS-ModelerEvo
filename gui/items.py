@@ -20,6 +20,7 @@ from qgis.PyQt.QtGui import (
 from qgis.PyQt.QtWidgets import QGraphicsItem, QGraphicsLineItem, QGraphicsPathItem
 
 from ..core import model_utils as mu
+from ..i18n import tr
 from .icons import ACCENT, CATEGORY_COLORS, NODE_COLORS, EVO_COLOR, EVO_TEXT, gear_icon, input_type_icon, model_icon, output_icon, output_type_icon
 
 GRID = 20
@@ -149,7 +150,7 @@ class NodeItem(QGraphicsItem):
             optional = p is not None and mu.param_has_flag(p, "Optional")
             value = mu.format_value(p.defaultValue(), p) if p else ""
             if optional:
-                value = (value + " · " if value else "") + "optionnel"
+                value = (value + " · " if value else "") + tr("optional")
             self.rows.append(Row("out", self.key, "@" + self.key, value,
                                  mu.category(p.type()) if p else "other"))
             help_text = mu.param_help(m, self.key) or (p.help() if p and hasattr(p, "help") else "")
@@ -164,7 +165,7 @@ class NodeItem(QGraphicsItem):
             self.title = child.description() or (alg.displayName() if alg else child.algorithmId())
             if alg is None:
                 self.node_type = "missing"
-                self.subtitle = f"Algorithme introuvable : {child.algorithmId()}"
+                self.subtitle = tr("Algorithm not found: {0}").format(child.algorithmId())
                 self.icon = gear_icon()
                 self.tooltip_html = self._tooltip(self.title, self.subtitle, "")
             else:
@@ -216,7 +217,7 @@ class NodeItem(QGraphicsItem):
         self.active = child.isActive()
         self.missing = False
         self.title = (mo.description() if mo else "") or oname
-        self.subtitle = "Sortie du modèle"
+        self.subtitle = tr("Model output")
         self.icon = output_icon()
         self.evo_only = mu.is_extended_output(child, mo)
         source = child.description() or (alg.displayName() if alg else child.algorithmId())
@@ -224,7 +225,7 @@ class NodeItem(QGraphicsItem):
         if odef is not None:
             source += " › " + odef.description()
             self.icon = output_type_icon(odef.type())
-        self.rows.append(Row("info", "source", "Source", _single_line(source), "other"))
+        self.rows.append(Row("info", "source", tr("Source"), _single_line(source), "other"))
         help_text = mu.output_help(m, cid, oname)
         self.tooltip_html = self._tooltip(self.title, self.subtitle, help_text)
         if self.evo_only:
@@ -241,7 +242,7 @@ class NodeItem(QGraphicsItem):
 
     @staticmethod
     def _tooltip(title, subtitle, help_text):
-        body = help_text if help_text else "<i>Aucune aide définie (onglet « Aide »).</i>"
+        body = help_text if help_text else "<i>" + html.escape(tr("No help defined (“Help” tab).")) + "</i>"
         return (f"<b>{html.escape(title)}</b><br/><span style='color:#666'>"
                 f"{html.escape(subtitle)}</span><hr/>{body}")
 
@@ -359,7 +360,7 @@ class NodeItem(QGraphicsItem):
         text_w = r.width() - 48 - right_pad
         _draw_text(p, QRectF(r.left() + 46, r.top() + 8, text_w, 18), self.title,
                    _AL.AlignLeft | _AL.AlignVCenter, _font(13, bold=True), "#ffffff")
-        sub = self.subtitle if self.active else self.subtitle + " (désactivé)"
+        sub = self.subtitle if self.active else tr("{0} (deactivated)").format(self.subtitle)
         _draw_text(p, QRectF(r.left() + 46, r.top() + 27, text_w, 15), sub,
                    _AL.AlignLeft | _AL.AlignVCenter, _font(11), QColor(255, 255, 255, 215))
 
@@ -508,11 +509,11 @@ class NodeItem(QGraphicsItem):
     def mouseReleaseEvent(self, ev):
         if self._resizing:
             self._resizing = None
-            self.mscene.commit_layout("Redimensionner")
+            self.mscene.commit_layout(tr("Resize"))
             return
         super().mouseReleaseEvent(ev)
         if self._press_pos is not None and self.pos() != self._press_pos:
-            self.mscene.commit_layout("Déplacer")
+            self.mscene.commit_layout(tr("Move"))
         self._press_pos = None
 
     def mouseDoubleClickEvent(self, ev):
@@ -701,7 +702,7 @@ class CommentItem(QGraphicsItem):
     def mouseReleaseEvent(self, ev):
         super().mouseReleaseEvent(ev)
         if self._press_pos is not None and self.pos() != self._press_pos:
-            self.mscene.commit_layout("Déplacer le commentaire")
+            self.mscene.commit_layout(tr("Move comment"))
         self._press_pos = None
 
     def mouseDoubleClickEvent(self, ev):
@@ -810,7 +811,7 @@ class GroupBoxItem(QGraphicsItem):
         self.mscene.group_moving = False
         if self._resizing:
             self._resizing = None
-            self.mscene.commit_layout("Redimensionner le cadre")
+            self.mscene.commit_layout(tr("Resize group box"))
             return
         super().mouseReleaseEvent(ev)
         moved = self._press_pos is not None and self.pos() != self._press_pos
@@ -818,7 +819,7 @@ class GroupBoxItem(QGraphicsItem):
         self._last_pos = None
         self._carried = []
         if moved:
-            self.mscene.commit_layout("Déplacer le cadre")
+            self.mscene.commit_layout(tr("Move group box"))
 
     def mouseDoubleClickEvent(self, ev):
         self.mscene.request("edit_group", "group", self.uuid)

@@ -44,6 +44,7 @@ except ImportError:  # Qt5
     from qgis.PyQt.QtWidgets import QAction, QUndoCommand, QUndoStack
 
 from ..core import model_utils as mu
+from ..i18n import tr
 from . import node_dialog
 from .help_dialog import ModelHelpDialog
 from .icons import output_type_icon, plugin_icon, theme_icon
@@ -145,16 +146,16 @@ class ModelerWindow(QMainWindow):
             self.vars_panel = None
         self.undo_view = QUndoView(self.undo_stack)
 
-        self.dock_inputs = self._dock("Entrées", self.inputs_panel, left, "mevo_inputs")
-        self.dock_algs = self._dock("Algorithmes", self.algs_panel, left, "mevo_algorithms")
+        self.dock_inputs = self._dock(tr("Inputs"), self.inputs_panel, left, "mevo_inputs")
+        self.dock_algs = self._dock(tr("Algorithms"), self.algs_panel, left, "mevo_algorithms")
         self.tabifyDockWidget(self.dock_inputs, self.dock_algs)
         self.dock_inputs.raise_()
-        self.dock_props = self._dock("Propriétés du modèle", self.props_panel, right, "mevo_props")
+        self.dock_props = self._dock(tr("Model properties"), self.props_panel, right, "mevo_props")
         docks = [self.dock_props]
         if self.vars_panel is not None:
-            self.dock_vars = self._dock("Variables", self.vars_panel, right, "mevo_variables")
+            self.dock_vars = self._dock(tr("Variables"), self.vars_panel, right, "mevo_variables")
             docks.append(self.dock_vars)
-        self.dock_undo = self._dock("Historique", self.undo_view, right, "mevo_undo")
+        self.dock_undo = self._dock(tr("History"), self.undo_view, right, "mevo_undo")
         docks.append(self.dock_undo)
         for d in docks[1:]:
             self.tabifyDockWidget(docks[0], d)
@@ -181,71 +182,71 @@ class ModelerWindow(QMainWindow):
     def _build_actions(self):
         SK = QKeySequence.StandardKey
         A = self._action
-        self.a_new = A("Nouveau modèle", self.new_model, "/mActionFileNew.svg", SK.New)
-        self.a_open = A("Ouvrir un modèle…", self.open_model, "/mActionFileOpen.svg", SK.Open)
-        self.a_save = A("Enregistrer", self.save, "/mActionFileSave.svg", SK.Save)
-        self.a_save_as = A("Enregistrer sous…", self.save_as, "/mActionFileSaveAs.svg", "Ctrl+Shift+S")
-        self.a_save_project = A("Enregistrer dans le projet", self.save_in_project, "/mAddToProject.svg")
-        self.a_validate = A("Valider le modèle", self.validate, "/mIconSuccess.svg")
-        self.a_run = A("Exécuter le modèle…", self.run_model, "/mActionStart.svg", "F5")
-        self.a_reorder = A("Réordonner les entrées…", self.reorder_inputs)
-        self.a_help = A("Modifier l'aide du modèle…", self.edit_model_help, "/mActionEditHelpContent.svg")
-        self.a_exp_img = A("Exporter en image…", self.export_image, "/mActionSaveMapAsImage.svg")
-        self.a_exp_pdf = A("Exporter en PDF…", self.export_pdf, "/mActionSaveAsPDF.svg")
-        self.a_exp_svg = A("Exporter en SVG…", self.export_svg, "/mActionSaveAsSVG.svg")
-        self.a_exp_py = A("Exporter en script Python…", self.export_python, "/mActionSaveAsPython.svg")
+        self.a_new = A(tr("New model"), self.new_model, "/mActionFileNew.svg", SK.New)
+        self.a_open = A(tr("Open model…"), self.open_model, "/mActionFileOpen.svg", SK.Open)
+        self.a_save = A(tr("Save"), self.save, "/mActionFileSave.svg", SK.Save)
+        self.a_save_as = A(tr("Save as…"), self.save_as, "/mActionFileSaveAs.svg", "Ctrl+Shift+S")
+        self.a_save_project = A(tr("Save in project"), self.save_in_project, "/mAddToProject.svg")
+        self.a_validate = A(tr("Validate model"), self.validate, "/mIconSuccess.svg")
+        self.a_run = A(tr("Run model…"), self.run_model, "/mActionStart.svg", "F5")
+        self.a_reorder = A(tr("Reorder inputs…"), self.reorder_inputs)
+        self.a_help = A(tr("Edit model help…"), self.edit_model_help, "/mActionEditHelpContent.svg")
+        self.a_exp_img = A(tr("Export as image…"), self.export_image, "/mActionSaveMapAsImage.svg")
+        self.a_exp_pdf = A(tr("Export as PDF…"), self.export_pdf, "/mActionSaveAsPDF.svg")
+        self.a_exp_svg = A(tr("Export as SVG…"), self.export_svg, "/mActionSaveAsSVG.svg")
+        self.a_exp_py = A(tr("Export as Python script…"), self.export_python, "/mActionSaveAsPython.svg")
 
-        self.a_undo = self.undo_stack.createUndoAction(self, "Annuler")
+        self.a_undo = self.undo_stack.createUndoAction(self, tr("Undo"))
         self.a_undo.setIcon(theme_icon("/mActionUndo.svg"))
         self.a_undo.setShortcut(QKeySequence(SK.Undo))
-        self.a_redo = self.undo_stack.createRedoAction(self, "Rétablir")
+        self.a_redo = self.undo_stack.createRedoAction(self, tr("Redo"))
         self.a_redo.setIcon(theme_icon("/mActionRedo.svg"))
         self.a_redo.setShortcuts([QKeySequence(SK.Redo), QKeySequence("Ctrl+Y")])
         self.addAction(self.a_undo)
         self.addAction(self.a_redo)
-        self.a_select_all = A("Tout sélectionner", self.select_all, "/mActionSelectAll.svg", SK.SelectAll)
-        self.a_delete = A("Supprimer la sélection", self.delete_selected, "/mActionDeleteSelected.svg",
+        self.a_select_all = A(tr("Select all"), self.select_all, "/mActionSelectAll.svg", SK.SelectAll)
+        self.a_delete = A(tr("Delete selection"), self.delete_selected, "/mActionDeleteSelected.svg",
                           SK.Delete)
-        self.a_snap_sel = A("Aligner la sélection sur la grille", self.snap_selection)
-        self.a_group = A("Ajouter un cadre de groupe", lambda: self.add_group_box(None), "/mActionAddBasicRectangle.svg")
+        self.a_snap_sel = A(tr("Snap selection to grid"), self.snap_selection)
+        self.a_group = A(tr("Add group box"), lambda: self.add_group_box(None), "/mActionAddBasicRectangle.svg")
 
-        self.a_zoom_in = A("Zoom avant", lambda: self.view.zoom_by(1.25), "/mActionZoomIn.svg", "Ctrl++")
-        self.a_zoom_out = A("Zoom arrière", lambda: self.view.zoom_by(0.8), "/mActionZoomOut.svg", "Ctrl+-")
-        self.a_zoom_100 = A("Zoom à 100 %", self.view.zoom_actual, "/mActionZoomActual.svg", "Ctrl+1")
-        self.a_zoom_full = A("Zoom sur l'ensemble", self.view.zoom_full, "/mActionZoomFullExtent.svg", "Ctrl+0")
-        self.a_comments = A("Afficher les commentaires", self.scene.set_show_comments, checkable=True,
+        self.a_zoom_in = A(tr("Zoom in"), lambda: self.view.zoom_by(1.25), "/mActionZoomIn.svg", "Ctrl++")
+        self.a_zoom_out = A(tr("Zoom out"), lambda: self.view.zoom_by(0.8), "/mActionZoomOut.svg", "Ctrl+-")
+        self.a_zoom_100 = A(tr("Zoom to 100%"), self.view.zoom_actual, "/mActionZoomActual.svg", "Ctrl+1")
+        self.a_zoom_full = A(tr("Zoom to full extent"), self.view.zoom_full, "/mActionZoomFullExtent.svg", "Ctrl+0")
+        self.a_comments = A(tr("Show comments"), self.scene.set_show_comments, checkable=True,
                             checked=True)
-        self.a_snapping = A("Activer l'aimantation", self._set_snapping, checkable=True, checked=False)
-        self.a_dark = A("Thème sombre", self.scene.set_dark, checkable=True, checked=self.scene.dark)
-        self.a_panels = A("Afficher les panneaux", self._toggle_panels, shortcut="Ctrl+Tab",
+        self.a_snapping = A(tr("Enable snapping"), self._set_snapping, checkable=True, checked=False)
+        self.a_dark = A(tr("Dark theme"), self.scene.set_dark, checkable=True, checked=self.scene.dark)
+        self.a_panels = A(tr("Show panels"), self._toggle_panels, shortcut="Ctrl+Tab",
                           checkable=True, checked=True)
 
     def _build_menus(self):
         mb = self.menuBar()
-        m = mb.addMenu("&Modèle")
+        m = mb.addMenu(tr("&Model"))
         for a in (self.a_new, self.a_open, None, self.a_validate, self.a_run, None, self.a_reorder,
                   None, self.a_save, self.a_save_as, self.a_save_project, None, self.a_help):
             m.addSeparator() if a is None else m.addAction(a)
-        exp = m.addMenu("Exporter")
+        exp = m.addMenu(tr("Export"))
         for a in (self.a_exp_img, self.a_exp_pdf, self.a_exp_svg, self.a_exp_py):
             exp.addAction(a)
 
-        e = mb.addMenu("&Édition")
+        e = mb.addMenu(tr("&Edit"))
         for a in (self.a_undo, self.a_redo, None, self.a_select_all, self.a_snap_sel, None,
                   self.a_delete, None, self.a_group):
             e.addSeparator() if a is None else e.addAction(a)
 
-        v = mb.addMenu("&Vue")
-        self.zoom_to_menu = v.addMenu("Zoomer sur")
+        v = mb.addMenu(tr("&View"))
+        self.zoom_to_menu = v.addMenu(tr("Zoom to"))
         self.zoom_to_menu.aboutToShow.connect(self._fill_zoom_to)
         for a in (self.a_zoom_in, self.a_zoom_out, self.a_zoom_100, self.a_zoom_full, None,
                   self.a_comments, self.a_snapping, self.a_dark, None, self.a_panels):
             v.addSeparator() if a is None else v.addAction(a)
-        panels = v.addMenu("Panneaux")
+        panels = v.addMenu(tr("Panels"))
         for d in self.docks:
             panels.addAction(d.toggleViewAction())
 
-        tb = QToolBar("Navigation", self)
+        tb = QToolBar(tr("Navigation"), self)
         tb.setObjectName("mevo_toolbar")
         tb.setIconSize(QSize(22, 22))
         self.addToolBar(tb)
@@ -258,11 +259,11 @@ class ModelerWindow(QMainWindow):
     def _fill_zoom_to(self):
         self.zoom_to_menu.clear()
         if not self.scene.groups:
-            a = self.zoom_to_menu.addAction("(aucun cadre de groupe)")
+            a = self.zoom_to_menu.addAction(tr("(no group box)"))
             a.setEnabled(False)
         for g in self.scene.groups:
             self.zoom_to_menu.addAction(
-                g.title or "Groupe",
+                g.title or tr("Group"),
                 lambda g=g: self.view.fitInView(g.sceneBoundingRect().adjusted(-30, -30, 30, 30),
                                                 Qt.AspectRatioMode.KeepAspectRatio))
 
@@ -282,7 +283,7 @@ class ModelerWindow(QMainWindow):
         self._update_title()
 
     def _update_title(self):
-        name = self.model.name() or "Modèle sans titre"
+        name = self.model.name() or tr("Untitled model")
         self.setWindowTitle(f"{'*' if self.dirty else ''}{name} — ModelerEvo")
 
     def _clean_changed(self, clean):
@@ -343,7 +344,7 @@ class ModelerWindow(QMainWindow):
         self.begin_change()
         self.model.addModelParameter(param, comp)
         mu.set_param_help(self.model, param.name(), help_text)
-        self.end_change("Ajouter une entrée")
+        self.end_change(tr("Add input"))
         self.scene.focus_node("input", param.name())
 
     def edit_input(self, name, comment_tab=False):
@@ -379,18 +380,18 @@ class ModelerWindow(QMainWindow):
                 pass
             mu.rename_help_key(m, name, new_param.name())
         mu.set_param_help(m, new_param.name(), help_text)
-        self.end_change("Modifier l'entrée")
+        self.end_change(tr("Edit input"))
 
     # ================================================================ algorithmes
     def add_algorithm(self, alg_id, pos=None):
         alg = QgsApplication.processingRegistry().createAlgorithmById(alg_id)
         if alg is None:
-            self.push_message(f"Algorithme introuvable : {alg_id}", "warning")
+            self.push_message(tr("Algorithm not found: {0}").format(alg_id), "warning")
             return
         try:
             res = node_dialog.edit_algorithm(self, self.model, alg)
         except ImportError as e:
-            self.push_message(f"Le plugin Processing est requis : {e}", "critical")
+            self.push_message(tr("The Processing plugin is required: {0}").format(e), "critical")
             return
         if not res:
             return
@@ -413,7 +414,7 @@ class ModelerWindow(QMainWindow):
         self.begin_change()
         cid = self.model.addChildAlgorithm(child)
         mu.set_child_help(self.model, cid, help_text)
-        self.end_change("Ajouter un algorithme")
+        self.end_change(tr("Add algorithm"))
         self.scene.focus_node("child", cid)
         self._report_child_validity(cid)
 
@@ -422,7 +423,7 @@ class ModelerWindow(QMainWindow):
         child = m.childAlgorithm(cid)
         alg = child.algorithm()
         if alg is None:
-            self.push_message(f"L'algorithme « {child.algorithmId()} » n'est pas disponible.", "warning")
+            self.push_message(tr("Algorithm “{0}” is not available.").format(child.algorithmId()), "warning")
             return
         res = node_dialog.edit_algorithm(self, m, alg, child, mu.child_help(m, cid), comment_tab)
         if not res:
@@ -442,7 +443,7 @@ class ModelerWindow(QMainWindow):
         self.begin_change()
         m.setChildAlgorithm(new_child)
         mu.set_child_help(m, cid, help_text)
-        self.end_change("Modifier l'algorithme")
+        self.end_change(tr("Edit algorithm"))
         self._report_child_validity(cid)
 
     # ================================================================ sorties du modèle
@@ -474,7 +475,7 @@ class ModelerWindow(QMainWindow):
             out.comment().setColor(color)
         m.setChildAlgorithm(child)
         mu.set_output_help(m, cid, oname, help_text)
-        self.end_change("Modifier la sortie")
+        self.end_change(tr("Edit output"))
 
     def add_model_output(self, cid, out_name):
         """Expose une sortie d'algorithme (de n'importe quel type) comme sortie du modèle."""
@@ -495,10 +496,10 @@ class ModelerWindow(QMainWindow):
         outs[out_name] = mo
         child.setModelOutputs(outs)
         self.model.setChildAlgorithm(child)
-        self.end_change("Ajouter une sortie du modèle")
+        self.end_change(tr("Add model output"))
         self.scene.focus_node("output", (cid, out_name))
         if out_name not in self.model.childAlgorithm(cid).modelOutputs():
-            self.push_message("Cette sortie n'a pas pu être ajoutée au modèle.", "warning")
+            self.push_message(tr("This output could not be added to the model."), "warning")
 
     def _remove_output(self, key):
         cid, oname = key
@@ -515,7 +516,7 @@ class ModelerWindow(QMainWindow):
         except Exception:  # noqa: BLE001
             return
         if not ok:
-            self.push_message("Paramètres invalides : " + " ; ".join(errors), "warning", 8)
+            self.push_message(tr("Invalid parameters: {0}").format("; ".join(errors)), "warning", 8)
 
     def set_active(self, cid, active):
         self.begin_change()
@@ -523,7 +524,7 @@ class ModelerWindow(QMainWindow):
             self.model.activateChildAlgorithm(cid)
         else:
             self.model.deactivateChildAlgorithm(cid)
-        self.end_change("Activer l'algorithme" if active else "Désactiver l'algorithme")
+        self.end_change(tr("Activate algorithm") if active else tr("Deactivate algorithm"))
 
     # ================================================================ connexions
     def connect_link(self, src_key, cid, pname, detach=None):
@@ -558,7 +559,7 @@ class ModelerWindow(QMainWindow):
             srcs = [new]
         child.addParameterSources(pname, srcs)
         m.setChildAlgorithm(child)
-        self.end_change("Connecter")
+        self.end_change(tr("Connect"))
 
     def disconnect_link(self, cid, pname, key):
         m = self.model
@@ -571,12 +572,12 @@ class ModelerWindow(QMainWindow):
         self.begin_change()
         child.addParameterSources(pname, srcs)
         m.setChildAlgorithm(child)
-        self.end_change("Déconnecter")
+        self.end_change(tr("Disconnect"))
 
     # ================================================================ suppression
     def _remove_input(self, name):
         if self.model.childAlgorithmsDependOnParameter(name):
-            self.push_message(f"Impossible de supprimer « {name} » : des algorithmes en dépendent.",
+            self.push_message(tr("Cannot delete “{0}”: algorithms depend on it.").format(name),
                               "warning")
             return False
         self.model.removeModelParameter(name)
@@ -587,7 +588,7 @@ class ModelerWindow(QMainWindow):
         if not self.model.removeChildAlgorithm(cid):
             deps = self.model.dependentChildAlgorithms(cid)
             names = ", ".join(self.model.childAlgorithm(d).description() for d in deps)
-            self.push_message(f"Impossible de supprimer cet algorithme : {names} en dépend(ent).",
+            self.push_message(tr("Cannot delete this algorithm: {0} depend(s) on it.").format(names),
                               "warning")
             return False
         mu.sync_help(self.model)
@@ -619,7 +620,7 @@ class ModelerWindow(QMainWindow):
             self._remove_output(key)
         elif kind == "group":
             self.model.removeGroupBox(key)
-        self.end_change("Supprimer")
+        self.end_change(tr("Delete"))
 
     def delete_selected(self):
         items = self.scene.selectedItems()
@@ -634,7 +635,7 @@ class ModelerWindow(QMainWindow):
                 if self.model.removeChildAlgorithm(cid):
                     pending.remove(cid)
         if pending:
-            self.push_message("Certains algorithmes n'ont pas été supprimés : d'autres en dépendent.",
+            self.push_message(tr("Some algorithms were not deleted: other algorithms depend on them."),
                               "warning")
         mu.sync_help(self.model)
         for i in items:
@@ -646,11 +647,11 @@ class ModelerWindow(QMainWindow):
                 self.model.removeGroupBox(i.uuid)
             elif isinstance(i, CommentItem) and not i.node.isSelected():
                 self._set_comment(i.node.kind, i.node.key, "")
-        self.end_change("Supprimer la sélection")
+        self.end_change(tr("Delete selection"))
 
     # ================================================================ cadres de groupe
     def add_group_box(self, pos):
-        box = QgsProcessingModelGroupBox("Groupe")
+        box = QgsProcessingModelGroupBox(tr("Group"))
         sel = [i for i in self.scene.selectedItems() if isinstance(i, NodeItem)]
         if sel and pos is None:
             rect = QRectF()
@@ -664,14 +665,14 @@ class ModelerWindow(QMainWindow):
             box.setSize(QSizeF(420, 300))
         self.begin_change()
         self.model.addGroupBox(box)
-        self.end_change("Ajouter un cadre de groupe")
+        self.end_change(tr("Add group box"))
 
     def edit_group_box(self, uuid):
         box = next((b for b in self.model.groupBoxes() if b.uuid() == uuid), None)
         if box is None:
             return
         dlg = QDialog(self)
-        dlg.setWindowTitle("Cadre de groupe")
+        dlg.setWindowTitle(tr("Group box"))
         title = QLineEdit(box.description())
         color = QgsColorButton()
         try:
@@ -683,8 +684,8 @@ class ModelerWindow(QMainWindow):
         except AttributeError:
             color.setEnabled(False)
         form = QFormLayout(dlg)
-        form.addRow("Titre", title)
-        form.addRow("Couleur", color)
+        form.addRow(tr("Title"), title)
+        form.addRow(tr("Color"), color)
         bb = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         bb.accepted.connect(dlg.accept)
         bb.rejected.connect(dlg.reject)
@@ -696,7 +697,7 @@ class ModelerWindow(QMainWindow):
             box.setColor(color.color())
         self.begin_change()
         self.model.addGroupBox(box)
-        self.end_change("Modifier le cadre de groupe")
+        self.end_change(tr("Edit group box"))
 
     # ================================================================ requêtes de la scène
     def handle_request(self, action, kind, key, *args):
@@ -709,40 +710,40 @@ class ModelerWindow(QMainWindow):
             self.node_context_menu(kind, key, args[0])
         elif action == "comment_menu":
             menu = QMenu(self)
-            menu.addAction("Modifier le commentaire…", lambda: self.handle_request("edit_comment", kind, key))
-            menu.addAction("Supprimer le commentaire", lambda: self._delete_comment(kind, key))
+            menu.addAction(tr("Edit comment…"), lambda: self.handle_request("edit_comment", kind, key))
+            menu.addAction(tr("Delete comment"), lambda: self._delete_comment(kind, key))
             menu.exec(args[0])
         elif action == "edit_group":
             self.edit_group_box(key)
         elif action == "group_menu":
             menu = QMenu(self)
-            menu.addAction("Modifier…", lambda: self.edit_group_box(key))
-            menu.addAction("Supprimer", lambda: self.remove("group", key))
+            menu.addAction(tr("Edit…"), lambda: self.edit_group_box(key))
+            menu.addAction(tr("Delete"), lambda: self.remove("group", key))
             menu.exec(args[0])
 
     def _delete_comment(self, kind, key):
         self.begin_change()
         self._set_comment(kind, key, "")
-        self.end_change("Supprimer le commentaire")
+        self.end_change(tr("Delete comment"))
 
     def node_context_menu(self, kind, key, screen_pos):
         menu = QMenu(self)
         if kind == "input":
-            menu.addAction(theme_icon("/mActionToggleEditing.svg"), "Modifier…", lambda: self.edit_input(key))
-            menu.addAction("Commentaire…", lambda: self.edit_input(key, True))
+            menu.addAction(theme_icon("/mActionToggleEditing.svg"), tr("Edit…"), lambda: self.edit_input(key))
+            menu.addAction(tr("Comment…"), lambda: self.edit_input(key, True))
         elif kind == "output":
-            menu.addAction(theme_icon("/mActionToggleEditing.svg"), "Modifier…",
+            menu.addAction(theme_icon("/mActionToggleEditing.svg"), tr("Edit…"),
                            lambda: self.edit_output(key))
-            menu.addAction("Commentaire…", lambda: self.edit_output(key, True))
+            menu.addAction(tr("Comment…"), lambda: self.edit_output(key, True))
         else:
             child = self.model.childAlgorithm(key)
-            menu.addAction(theme_icon("/mActionToggleEditing.svg"), "Modifier…",
+            menu.addAction(theme_icon("/mActionToggleEditing.svg"), tr("Edit…"),
                            lambda: self.edit_algorithm(key))
-            menu.addAction("Commentaire…", lambda: self.edit_algorithm(key, True))
+            menu.addAction(tr("Comment…"), lambda: self.edit_algorithm(key, True))
             alg = child.algorithm()
             if alg is not None:
                 free = [o for o in alg.outputDefinitions() if o.name() not in child.modelOutputs()]
-                sub = menu.addMenu(theme_icon("/mActionFileSave.svg"), "Ajouter une sortie du modèle")
+                sub = menu.addMenu(theme_icon("/mActionFileSave.svg"), tr("Add model output"))
                 sub.setEnabled(bool(free))
                 for o in free:
                     label = f"{o.description() or o.name()}  ({o.type()})"
@@ -752,20 +753,20 @@ class ModelerWindow(QMainWindow):
                                   lambda n=o.name(): self.add_model_output(key, n))
             menu.addSeparator()
             if child.isActive():
-                menu.addAction("Désactiver", lambda: self.set_active(key, False))
+                menu.addAction(tr("Deactivate"), lambda: self.set_active(key, False))
             else:
-                menu.addAction("Activer", lambda: self.set_active(key, True))
+                menu.addAction(tr("Activate"), lambda: self.set_active(key, True))
             if key in self.child_results:
-                menu.addAction(theme_icon("/mActionShowSelectedLayers.svg"), "Voir les couches de sortie",
+                menu.addAction(theme_icon("/mActionShowSelectedLayers.svg"), tr("View output layers"),
                                lambda: self.view_output_layers(key))
         menu.addSeparator()
-        menu.addAction(theme_icon("/mActionDeleteSelected.svg"), "Supprimer", lambda: self.remove(kind, key))
+        menu.addAction(theme_icon("/mActionDeleteSelected.svg"), tr("Delete"), lambda: self.remove(kind, key))
         menu.exec(screen_pos)
 
     def canvas_context_menu(self, scene_pos, screen_pos):
         menu = QMenu(self)
-        menu.addAction("Ajouter un cadre de groupe ici", lambda: self.add_group_box(scene_pos))
-        menu.addAction("Zoom sur l'ensemble", self.view.zoom_full)
+        menu.addAction(tr("Add group box here"), lambda: self.add_group_box(scene_pos))
+        menu.addAction(tr("Zoom to full extent"), self.view.zoom_full)
         menu.exec(screen_pos)
 
     # ================================================================ édition
@@ -781,7 +782,7 @@ class ModelerWindow(QMainWindow):
                 tl = i.mapToScene(i.rect().topLeft())
                 d = QPointF(round(tl.x() / GRID) * GRID - tl.x(), round(tl.y() / GRID) * GRID - tl.y())
                 i.setPos(i.pos() + d)
-        self.scene.commit_layout("Aligner sur la grille")
+        self.scene.commit_layout(tr("Snap to grid"))
 
     def _name_group_changed(self):
         name, group = self.props_panel.name.text(), self.props_panel.group.text()
@@ -790,24 +791,24 @@ class ModelerWindow(QMainWindow):
         self.begin_change()
         self.model.setName(name)
         self.model.setGroup(group)
-        self.end_change("Modifier le nom / groupe", rebuild=False)
+        self.end_change(tr("Edit name / group"), rebuild=False)
         self._update_title()
 
     def _variables_changed(self):
         self.begin_change()
         self.model.setVariables(self.vars_panel.variables())
-        self.end_change("Modifier les variables", rebuild=False)
+        self.end_change(tr("Edit variables"), rebuild=False)
 
     def edit_model_help(self):
         dlg = ModelHelpDialog(self.model, self)
         if dlg.exec():
             self.begin_change()
             dlg.apply()
-            self.end_change("Modifier l'aide du modèle")
+            self.end_change(tr("Edit model help"))
 
     def reorder_inputs(self):
         dlg = QDialog(self)
-        dlg.setWindowTitle("Réordonner les entrées du modèle")
+        dlg.setWindowTitle(tr("Reorder model inputs"))
         lst = QListWidget()
         lst.setDragDropMode(QAbstractItemView.DragDropMode.InternalMove)
         try:
@@ -830,7 +831,7 @@ class ModelerWindow(QMainWindow):
             lst.insertItem(row + delta, it)
             lst.setCurrentRow(row + delta)
 
-        up, down = QPushButton("Monter"), QPushButton("Descendre")
+        up, down = QPushButton(tr("Move up")), QPushButton(tr("Move down"))
         up.clicked.connect(lambda: move(-1))
         down.clicked.connect(lambda: move(1))
         side = QVBoxLayout()
@@ -850,7 +851,7 @@ class ModelerWindow(QMainWindow):
             order = [lst.item(i).data(Qt.ItemDataRole.UserRole) for i in range(lst.count())]
             self.begin_change()
             self.model.setParameterOrder(order)
-            self.end_change("Réordonner les entrées", rebuild=False)
+            self.end_change(tr("Reorder inputs"), rebuild=False)
 
     # ================================================================ fichiers
     def _models_folder(self):
@@ -864,7 +865,7 @@ class ModelerWindow(QMainWindow):
         if not self.dirty:
             return True
         btn = QMessageBox.question(
-            self, "Modèle modifié", "Le modèle a été modifié. Enregistrer les modifications ?",
+            self, tr("Model modified"), tr("The model has been modified. Save the changes?"),
             QMessageBox.StandardButton.Save | QMessageBox.StandardButton.Discard
             | QMessageBox.StandardButton.Cancel)
         if btn == QMessageBox.StandardButton.Save:
@@ -888,13 +889,13 @@ class ModelerWindow(QMainWindow):
         if not self._confirm_discard():
             return
         if not path:
-            path, _ = QFileDialog.getOpenFileName(self, "Ouvrir un modèle", self._models_folder(),
-                                                  "Modèles Processing (*.model3 *.MODEL3)")
+            path, _ = QFileDialog.getOpenFileName(self, tr("Open model"), self._models_folder(),
+                                                  tr("Processing models") + " (*.model3 *.MODEL3)")
         if not path:
             return
         model = QgsProcessingModelAlgorithm()
         if not model.fromFile(path):
-            QMessageBox.critical(self, "Ouvrir un modèle", f"Impossible de lire le modèle :\n{path}")
+            QMessageBox.critical(self, tr("Open model"), tr("Cannot read the model:\n{0}").format(path))
             return
         model.setSourceFilePath(path)
         self.set_model(model)
@@ -902,8 +903,8 @@ class ModelerWindow(QMainWindow):
     def _prepare_save(self):
         self._name_group_changed()
         if not self.model.name():
-            QMessageBox.warning(self, "Enregistrer", "Veuillez indiquer un nom de modèle "
-                                "(panneau « Propriétés du modèle »).")
+            QMessageBox.warning(self, tr("Save"), tr("Please enter a model name "
+                                   "(“Model properties” panel)."))
             self.dock_props.show()
             self.dock_props.raise_()
             self.props_panel.name.setFocus()
@@ -922,15 +923,15 @@ class ModelerWindow(QMainWindow):
             return False
         if not path:
             default = os.path.join(self._models_folder(), mu.safe_name(self.model.name()) + ".model3")
-            path, _ = QFileDialog.getSaveFileName(self, "Enregistrer le modèle", default,
-                                                  "Modèles Processing (*.model3 *.MODEL3)")
+            path, _ = QFileDialog.getSaveFileName(self, tr("Save model"), default,
+                                                  tr("Processing models") + " (*.model3 *.MODEL3)")
             if not path:
                 return False
             if not path.lower().endswith(".model3"):
                 path += ".model3"
         self.model.setSourceFilePath(path)
         if not self.model.toFile(path):
-            QMessageBox.critical(self, "Enregistrer", f"Impossible d'écrire le fichier :\n{path}")
+            QMessageBox.critical(self, tr("Save"), tr("Cannot write the file:\n{0}").format(path))
             return False
         provider = QgsApplication.processingRegistry().providerById("model")
         if provider is not None:
@@ -938,7 +939,7 @@ class ModelerWindow(QMainWindow):
         self.undo_stack.setClean()
         self.dirty = False
         self._update_title()
-        self.push_message(f"Modèle enregistré : {path}", "success")
+        self.push_message(tr("Model saved: {0}").format(path), "success")
         return True
 
     def save_in_project(self):
@@ -946,14 +947,14 @@ class ModelerWindow(QMainWindow):
             return
         provider = QgsApplication.processingRegistry().providerById("project")
         if provider is None or not hasattr(provider, "add_model"):
-            self.push_message("Le fournisseur « modèles du projet » n'est pas disponible.", "warning")
+            self.push_message(tr("The “project models” provider is not available."), "warning")
             return
         self.model.setSourceFilePath("")
         provider.add_model(self.model)
         self.undo_stack.setClean()
         self.dirty = False
         self._update_title()
-        self.push_message("Modèle enregistré dans le projet. Pensez à enregistrer le projet.", "success")
+        self.push_message(tr("Model saved in the project. Remember to save the project."), "success")
 
     # ================================================================ validation / exécution
     def validate(self):
@@ -962,10 +963,10 @@ class ModelerWindow(QMainWindow):
         except AttributeError:
             ok, issues = True, []
         if ok:
-            self.push_message("Le modèle est valide.", "success")
+            self.push_message(tr("The model is valid."), "success")
         else:
-            QMessageBox.warning(self, "Valider le modèle",
-                                "Le modèle n'est pas valide :\n\n• " + "\n• ".join(issues))
+            QMessageBox.warning(self, tr("Validate model"),
+                                tr("The model is not valid:") + "\n\n• " + "\n• ".join(issues))
 
     def _create_execution_dialog(self, alg):
         """Fenêtre d'exécution d'un algorithme (QGIS 4 : widget Processing ; QGIS 3 : AlgorithmDialog).
@@ -989,9 +990,9 @@ class ModelerWindow(QMainWindow):
             factory = QgsGui.processingGuiRegistry().dialogFactory()
             if factory is not None:
                 return factory.createWidget(alg, False, self), None
-            errors.append("fabrique de dialogues absente")
+            errors.append("no processing dialog factory")
         except Exception as e:  # noqa: BLE001
-            errors.append(f"fabrique : {type(e).__name__}: {e}")
+            errors.append(f"dialog factory: {type(e).__name__}: {e}")
         try:  # QGIS 3.x
             from processing.gui.AlgorithmDialog import AlgorithmDialog
             return AlgorithmDialog(alg, parent=self), None
@@ -1001,13 +1002,13 @@ class ModelerWindow(QMainWindow):
 
     def run_model(self):
         if not self.model.childAlgorithms():
-            self.push_message("Le modèle ne contient aucun algorithme.", "warning")
+            self.push_message(tr("The model does not contain any algorithm."), "warning")
             return
         mu.sync_help(self.model)
         alg = self.model.create()
         dlg, err = self._create_execution_dialog(alg)
         if dlg is None:
-            self.push_message("Impossible d'ouvrir la fenêtre d'exécution : " + err, "critical", 15)
+            self.push_message(tr("Cannot open the execution dialog: {0}").format(err), "critical", 15)
             return
         level = getattr(getattr(Qgis, "ProcessingLogLevel", None), "ModelDebug", None)
         if level is not None:
@@ -1061,8 +1062,8 @@ class ModelerWindow(QMainWindow):
             if layer.isValid():
                 QgsProject.instance().addMapLayer(layer)
                 added += 1
-        self.push_message(f"{added} couche(s) ajoutée(s) au projet." if added
-                          else "Aucune couche de sortie disponible.", "info")
+        self.push_message(tr("{0} layer(s) added to the project.").format(added) if added
+                          else tr("No output layer available."), "info")
 
     # ================================================================ exports
     def _render(self, painter, target=None):
@@ -1076,14 +1077,14 @@ class ModelerWindow(QMainWindow):
         self.scene.exporting = False
 
     def _export_path(self, title, filt, ext):
-        default = os.path.join(self._models_folder(), (mu.safe_name(self.model.name()) or "modele") + ext)
+        default = os.path.join(self._models_folder(), (mu.safe_name(self.model.name()) or "model") + ext)
         path, _ = QFileDialog.getSaveFileName(self, title, default, filt)
         if path and not path.lower().endswith(ext):
             path += ext
         return path
 
     def export_image(self):
-        path = self._export_path("Exporter en image", "PNG (*.png)", ".png")
+        path = self._export_path(tr("Export as image"), "PNG (*.png)", ".png")
         if not path:
             return
         rect = self.scene.itemsBoundingRect().adjusted(-20, -20, 20, 20)
@@ -1095,10 +1096,10 @@ class ModelerWindow(QMainWindow):
         self._render(p, QRectF(0, 0, img.width(), img.height()))
         p.end()
         img.save(path)
-        self.push_message(f"Image exportée : {path}", "success")
+        self.push_message(tr("Image exported: {0}").format(path), "success")
 
     def export_pdf(self):
-        path = self._export_path("Exporter en PDF", "PDF (*.pdf)", ".pdf")
+        path = self._export_path(tr("Export as PDF"), "PDF (*.pdf)", ".pdf")
         if not path:
             return
         from qgis.PyQt.QtCore import QMarginsF
@@ -1112,10 +1113,10 @@ class ModelerWindow(QMainWindow):
         p = QPainter(writer)
         self._render(p)
         p.end()
-        self.push_message(f"PDF exporté : {path}", "success")
+        self.push_message(tr("PDF exported: {0}").format(path), "success")
 
     def export_svg(self):
-        path = self._export_path("Exporter en SVG", "SVG (*.svg)", ".svg")
+        path = self._export_path(tr("Export as SVG"), "SVG (*.svg)", ".svg")
         if not path:
             return
         from qgis.PyQt.QtSvg import QSvgGenerator
@@ -1124,11 +1125,11 @@ class ModelerWindow(QMainWindow):
         gen.setFileName(path)
         gen.setSize(rect.size().toSize())
         gen.setViewBox(QRectF(0, 0, rect.width(), rect.height()))
-        gen.setTitle(self.model.name() or "Modèle")
+        gen.setTitle(self.model.name() or tr("Model"))
         p = QPainter(gen)
         self._render(p, QRectF(0, 0, rect.width(), rect.height()))
         p.end()
-        self.push_message(f"SVG exporté : {path}", "success")
+        self.push_message(tr("SVG exported: {0}").format(path), "success")
 
     def export_python(self):
         mu.sync_help(self.model)
@@ -1139,15 +1140,15 @@ class ModelerWindow(QMainWindow):
                 out_type = owner.PythonQgsProcessingAlgorithmSubclass
                 break
         if out_type is None:
-            self.push_message("Export Python non disponible dans cette version de QGIS.", "warning")
+            self.push_message(tr("Python export is not available in this QGIS version."), "warning")
             return
         code = "\n".join(self.model.asPythonCode(out_type, 4))
-        path = self._export_path("Exporter en script Python", "Python (*.py)", ".py")
+        path = self._export_path(tr("Export as Python script"), "Python (*.py)", ".py")
         if not path:
             return
         with open(path, "w", encoding="utf-8") as fh:
             fh.write(code)
-        self.push_message(f"Script exporté : {path}", "success")
+        self.push_message(tr("Script exported: {0}").format(path), "success")
 
     # ================================================================ fermeture
     def closeEvent(self, ev):  # noqa: N802

@@ -5,20 +5,22 @@ Version modernisée du modeleur graphique de Processing. Les modèles restent au
 sont à respecter.
 
 - Plugin QGIS 3.34 → 4.x, compatible Qt6 (`qgis.PyQt` uniquement, pas d'import PyQt direct)
-- Interface et commentaires en français
+- Interface traduite (voir « Traductions ») : textes du code **en anglais**, traduction française
+  fournie ; commentaires et docstrings en français
 - Version 0.1.0, expérimental (voir `metadata.txt`)
 - Nom du plugin : **ModelerEvo** (ne pas le franciser) ; badge « Evo » ; dossier `modeler_evo`
 - Licence GPL-3.0-or-later (`LICENSE`, champ `license` de `metadata.txt`)
 - Dépôt GitHub : https://github.com/naub1n/QGIS-ModelerEvo ; à chaque nouvelle version, mettre à jour
   `version` et `changelog` dans `metadata.txt`
 - Les utilisateurs installent le plugin depuis le ZIP versionné publié dans les releases GitHub (dossier
-  racine `modeler_evo/`, sans `.claude/` ni `.gitignore`)
+  racine `modeler_evo/`, sans `.claude/`, `tools/` ni `.gitignore`)
 - Publier une version :
-  1. mettre à jour `version` et `changelog` dans `metadata.txt`, committer
+  1. mettre à jour `version` et `changelog` dans `metadata.txt`, vérifier les traductions
+     (`python3 tools/update_translations.py --check`), committer
   2. poser un tag annoté `v<version>` (identique à `version` de `metadata.txt`) sur ce commit :
      `git tag -a v<version> -m "ModelerEvo <version>"`
   3. construire le ZIP **depuis le tag** :
-     `git archive --prefix=modeler_evo/ -o modeler_evo-<version>.zip v<version> -- . ':!.claude' ':!.gitignore'`
+     `git archive --prefix=modeler_evo/ -o modeler_evo-<version>.zip v<version> -- . ':!.claude' ':!.gitignore' ':!tools'`
   4. pousser branche et tag (`git push origin main v<version>`), puis créer la release GitHub sur ce tag
      avec le ZIP en pièce jointe (`gh release create v<version> modeler_evo-<version>.zip`)
 
@@ -64,6 +66,11 @@ Menu de paramétrage, 3 onglets :
 ## Structure
 
 ```
+__init__.py          classFactory : installe la traduction (install_translator) avant d'importer plugin.py
+i18n.py              tr() (contexte « ModelerEvo »), chargement / retrait du QTranslator selon la langue de QGIS
+i18n/                modeler_evo_<langue>.ts (sources Qt Linguist) et .qm compilés (versionnés, livrés)
+tools/               update_translations.py : extrait les tr(), met à jour les .ts, compile les .qm
+                     (outil de développement, exclu du ZIP de release)
 plugin.py            Point d'entrée (ModelerEvoPlugin) : menu « ModelerEvo », icône de barre d'outils,
                      entrée dans le menu Traitement, entrée « Éditer avec ModelerEvo… » du menu
                      contextuel de la boîte à outils (QGIS ≥ 4.4 : `QgsProcessingToolboxContextAction` via
@@ -141,6 +148,27 @@ modeler.rst          Documentation du modeleur d'origine (référence, CC BY-SA)
   ne dépendent pas du thème
 - Pour ajouter une couleur dépendant du thème : l'ajouter aux deux dictionnaires de `theme.py`,
   puis la lire via `pal["..."]` plutôt que d'écrire une couleur en dur dans `items.py`
+
+## Traductions
+
+- Langue source : **anglais** ; traduction : français (`i18n/modeler_evo_fr.ts` → `.qm`). Toute autre
+  langue de QGIS affiche l'anglais
+- **Tout texte visible par l'utilisateur** (libellés, menus, info-bulles, messages, historique
+  d'annulation, titres de fenêtres) passe par `tr("…")` (`from ..i18n import tr`), avec un texte
+  **littéral** anglais : pas de f-string ni de variable dans `tr()` (l'extracteur les ignore). Valeurs
+  variables : `tr("Model saved: {0}").format(path)`
+- Après tout ajout / modification de texte : `python3 tools/update_translations.py` (lrelease requis :
+  paquet `qt6-l10n-tools`, binaire `/usr/lib/qt6/bin/lrelease`), compléter la traduction française dans
+  le `.ts` (retirer `type="unfinished"`), relancer pour compiler le `.qm`, et committer `.ts` et `.qm`.
+  `--check` échoue s'il reste des textes à traduire
+- Les libellés de niveau module (`CATEGORY_LABELS`, `HELP_KEYS`, `EVO_TEXT`) sont traduits à l'import :
+  le traducteur doit être installé avant (fait dans `classFactory`)
+- `metadata.txt` : `description` / `about` en anglais, variantes `description[fr]` / `about[fr]` lues
+  par le gestionnaire d'extensions selon la langue de QGIS
+- Les titres « Model steps / Model outputs » insérés par `sync_help` dans l'aide du `.model3` sont dans
+  la langue de celui qui enregistre le modèle
+- Non traduits volontairement : badge / préfixe « Evo » / « [Evo] », nom « ModelerEvo », détails
+  techniques d'erreur de `_create_execution_dialog`
 
 ## Conventions et pièges
 

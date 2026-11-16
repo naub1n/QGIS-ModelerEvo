@@ -5,6 +5,7 @@ from qgis.PyQt.QtGui import QColor, QPainterPath, QPen
 from qgis.PyQt.QtWidgets import QGraphicsPathItem, QGraphicsScene, QGraphicsView
 
 from ..core import model_utils as mu
+from ..i18n import tr
 from .icons import ACCENT, CATEGORY_COLORS
 from .theme import DARK, LIGHT
 from .items import GRID, CommentItem, EdgeItem, GroupBoxItem, NodeItem
@@ -151,7 +152,7 @@ class ModelScene(QGraphicsScene):
                 src = self.inputs.get(dep)
                 if src:
                     self._add_edge(src, dep, node, None, "parent", "#9aa3ad",
-                                   f"« {p.description()} » dépend de « {src.title} »")
+                                   tr("“{0}” depends on “{1}”").format(p.description(), src.title))
         for cid, node in self.children.items():
             child = m.childAlgorithm(cid)
             visible = {r.name for r in node.rows if r.side == "in"}
@@ -175,13 +176,13 @@ class ModelScene(QGraphicsScene):
                         if src and src is not node:
                             self._add_edge(src, sname, node, pname, "expression",
                                            self._source_color(src, sname),
-                                           f"Utilisé dans une expression : {src.title} → "
-                                           f"{node.title} ({node.row('in', pname).label})")
+                                           tr("Used in an expression: {0}").format(
+                                               f"{src.title} → {node.title} ({node.row('in', pname).label})"))
             for dep in mu.child_dependency_ids(child):
                 src = self.children.get(dep)
                 if src:
                     self._add_edge(src, None, node, None, "dependency", "#7b8794",
-                                   f"Dépendance : {src.title} s'exécute avant {node.title}")
+                                   tr("Dependency: {0} runs before {1}").format(src.title, node.title))
 
     def _build_output_edges(self):
         """Flèche de chaque sortie d'algorithme vers son noeud de sortie (orange)."""
@@ -195,7 +196,7 @@ class ModelScene(QGraphicsScene):
             if cnode.row("out", src_name):
                 self._add_edge(cnode, src_name, onode, None, "direct",
                                self._source_color(cnode, src_name),
-                               f"{cnode.title} → sortie « {onode.title} »")
+                               tr("{0} → output “{1}”").format(cnode.title, onode.title))
 
     def update_node_links(self, node):
         for edge in node.edges:
