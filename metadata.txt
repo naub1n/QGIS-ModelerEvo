@@ -1,0 +1,21 @@
+[general]
+name=ModelerEvo
+qgisMinimumVersion=3.34
+qgisMaximumVersion=4.99
+supportsQt6=True
+description=Version modernisée du modeleur graphique de Processing.
+about=Concepteur de modèles Processing au design modernisé : noeuds redimensionnables avec entrées et sorties visibles, points d'accroche typés et colorés, connexion par glisser-déposer, flèches directes et indirectes (expressions), commentaires, cadres de groupe, aide par noeud. Les modèles restent au format .model3, 100 % compatibles avec le modeleur d'origine.
+version=0.1.0
+author=Nicolas Aubin
+email=aubinnic@gmail.com
+category=Analysis
+icon=icons/icon.svg
+experimental=True
+deprecated=False
+license=GPL-3.0-or-later
+changelog=
+    0.1.0 - Première version expérimentale : noeuds redimensionnables, points d'accroche typés, flèches directes / expressions / dépendances, commentaires, cadres de groupe, aide par noeud, sorties étendues [Evo], thème sombre, exports image / PDF / SVG / Python, compatibilité QGIS 3.34 à 4.x (Qt5 / Qt6)
+tags=processing,modeler,model,graphical,workflow
+homepage=https://github.com/
+repository=https://github.com/
+tracker=https://github.com/
