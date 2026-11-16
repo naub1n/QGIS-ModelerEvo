@@ -1,4 +1,4 @@
-"""Thèmes de couleurs du canevas (clair / sombre)."""
+"""Canvas color themes (light / dark)."""
 
 LIGHT = {
     "bg": "#f3f5f8", "dots": "#cdd4de",

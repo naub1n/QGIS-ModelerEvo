@@ -1,4 +1,4 @@
-"""Panneaux latéraux : entrées, algorithmes, propriétés du modèle, variables."""
+"""Side panels: inputs, algorithms, model properties, variables."""
 
 from qgis.core import Qgis, QgsApplication, QgsExpressionContext, QgsExpressionContextScope, QgsMessageLog
 from qgis.PyQt.QtCore import QByteArray, QMimeData, QModelIndex, Qt, pyqtSignal
@@ -69,7 +69,7 @@ class _MimeTree(QTreeWidget):
 
 
 class InputsPanel(QWidget):
-    """Liste des types d'entrées, groupés par catégorie, avec leur icône."""
+    """List of the input types, grouped by category, with their icon."""
 
     activated = pyqtSignal(str)
 
@@ -128,10 +128,10 @@ class InputsPanel(QWidget):
 
 
 def _make_native_tree(parent):
-    """Arbre natif de la boîte à outils, avec un glisser géré par le plugin.
+    """Native Processing Toolbox tree, with dragging handled by the plugin.
 
-    Le glisser natif ne démarrait pas (l'arbre se refermait sans rien déposer) : on lance
-    nous-mêmes le QDrag, avec l'identifiant de l'algorithme en UTF-8 brut (format ALG_MIME).
+    The native drag did not start (the tree collapsed without dropping anything): the
+    QDrag is started here, with the algorithm id as raw UTF-8 (ALG_MIME format).
     """
     from qgis.gui import QgsProcessingToolboxTreeView
 
@@ -161,7 +161,7 @@ def _make_native_tree(parent):
 
 
 class AlgorithmsPanel(QWidget):
-    """Boîte à outils Processing filtrée pour le modeleur."""
+    """Processing Toolbox filtered for the modeler."""
 
     activated = pyqtSignal(str)
     parameter_activated = pyqtSignal(str)
@@ -179,13 +179,13 @@ class AlgorithmsPanel(QWidget):
             filt_owner = getattr(QgsProcessingToolboxProxyModel, "Filter", QgsProcessingToolboxProxyModel)
             flt = getattr(filt_owner, "Modeler", None) or getattr(QgsProcessingToolboxProxyModel, "FilterModeler")
             self.tree.setFilters(flt)
-            self.tree.setDragEnabled(False)  # glisser géré par _make_native_tree
-            self.tree.setHeaderHidden(True)  # sinon Qt affiche « 1 » (n° de colonne)
+            self.tree.setDragEnabled(False)  # dragging handled by _make_native_tree
+            self.tree.setHeaderHidden(True)  # otherwise Qt shows "1" (column number)
             self.tree.doubleClicked.connect(self._native_double_clicked)
             self.search.textChanged.connect(self.tree.setFilterString)
             self._setup_hide_inputs()
             self.native = True
-        except Exception:  # noqa: BLE001 - repli sur une arborescence simple
+        except Exception:  # noqa: BLE001 - fallback to a simple tree
             self.tree = _MimeTree()
             self.tree.mime_type = ALG_MIME
             self._populate_fallback()
@@ -195,7 +195,7 @@ class AlgorithmsPanel(QWidget):
         lay.addWidget(self.tree)
 
     def _setup_hide_inputs(self):
-        """Masque le groupe « Paramètres d'entrée » (doublon avec le dock Entrées)."""
+        """Hide the "Input parameters" group (duplicate of the Inputs dock)."""
         from qgis.PyQt.QtCore import QTimer
         model = self.tree.model()
         self._hide_timer = QTimer(self)
@@ -205,8 +205,8 @@ class AlgorithmsPanel(QWidget):
         self._hide_timer.timeout.connect(self._restore_expanded)
         for sig in ("rowsInserted", "rowsRemoved", "layoutChanged", "modelReset"):
             getattr(model, sig).connect(lambda *_a: self._hide_timer.start())
-        # mémorise les groupes ouverts : QGIS reconstruit l'arbre (ajout d'un fournisseur au démarrage,
-        # p. ex. « ModelerEvo » après 3 s) ce qui les refermait
+        # remember the expanded groups: QGIS rebuilds the tree (a provider added at startup,
+        # e.g. after 3 s), which collapsed them
         self._expanded = set()
         self.tree.expanded.connect(lambda i: self._track_expanded(i, True))
         self.tree.collapsed.connect(lambda i: self._track_expanded(i, False))
@@ -220,7 +220,7 @@ class AlgorithmsPanel(QWidget):
         return tuple(reversed(path))
 
     def _track_expanded(self, index, opened):
-        if self.search.text().strip():  # la recherche ouvre tout : ne pas mémoriser
+        if self.search.text().strip():  # searching expands everything: do not remember
             return
         (self._expanded.add if opened else self._expanded.discard)(self._index_path(index))
 
@@ -240,12 +240,12 @@ class AlgorithmsPanel(QWidget):
         walk(QModelIndex())
 
     def _is_parameter_index(self, proxy, index):
-        """Vrai si l'index désigne un type de paramètre (sans toucher à la sélection de l'arbre)."""
+        """True if the index is a parameter type (without touching the tree selection)."""
         try:
             return bool(proxy.toolboxModel().isParameter(proxy.mapToSource(index)))
         except Exception:  # noqa: BLE001
             pass
-        try:  # repli : le MIME d'un type de paramètre porte un format dédié
+        try:  # fallback: the MIME data of a parameter type has a dedicated format
             mime = proxy.mimeData([index])
             return mime is not None and mime.hasFormat(PARAM_MIME)
         except Exception:  # noqa: BLE001
@@ -316,7 +316,7 @@ class AlgorithmsPanel(QWidget):
 
 
 class PropertiesPanel(QWidget):
-    """Nom et groupe du modèle."""
+    """Model name and group."""
 
     def __init__(self, parent=None):
         super().__init__(parent)

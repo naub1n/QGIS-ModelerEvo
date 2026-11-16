@@ -1,89 +1,89 @@
 # ModelerEvo
 
-Version modernisée du modeleur graphique de Processing pour QGIS.
+🇫🇷 [Version française](README_FR.md)
 
-Les modèles restent au format `.model3` et sont **100 % compatibles** avec le modeleur d'origine :
-un modèle créé ou modifié avec ModelerEvo s'ouvre dans le modeleur de QGIS, et inversement.
+Modernized version of the Processing graphical modeler for QGIS.
 
-> **Statut : expérimental (0.1.0).** Pensez à sauvegarder vos modèles avant de les modifier.
+Models keep the `.model3` format and are **100% compatible** with the original modeler: a model
+created or edited with ModelerEvo opens in the QGIS modeler, and vice versa.
 
-## Fonctionnalités
+> **Status: experimental (0.1.0).** Back up your models before editing them.
 
-- **Noeuds redimensionnables** à en-tête coloré : entrées (vert), algorithmes (bleu), sorties du
-  modèle (orange) ; titre, sous-titre (type d'entrée, nom de l'algorithme ou du modèle) et liste des
-  entrées / sorties dans le corps du noeud
-- **Icône par type** d'entrée et de sortie, roue crantée pour les algorithmes
-- **Points d'accroche typés** et colorés par catégorie ; connexion par glisser-déposer avec mise en
-  évidence des cibles compatibles
-- **Flèches** : relation directe (trait plein), expression (tirets), dépendance (pointillés)
-- **Paramétrage par double-clic** : onglets Propriétés, Commentaires et Aide
-- **Commentaires** et **cadres de groupe** colorés
-- **Aide par noeud**, affichée au survol et reprise dans la fenêtre d'aide du modèle
-- **Sorties étendues** `[Evo]` : sorties d'algorithme non liées à un paramètre (nombre, texte, HTML…)
-- Annuler / rétablir, zoom, aimantation à la grille, **thème sombre**
-- Docks : entrées, algorithmes (recherche, glisser-déposer), propriétés, variables
-- Validation, exécution (F5), enregistrement dans un fichier ou dans le projet
-- Exports : image, PDF, SVG, script Python
+## Features
 
-### Badge « Evo »
+- **Resizable nodes** with a colored header: inputs (green), algorithms (blue), model outputs
+  (orange); title, subtitle (input type, algorithm or model name) and list of inputs / outputs in the
+  node body
+- **Icon for each type** of input and output, gear wheel for algorithms
+- **Typed connection points**, colored by category; drag-and-drop connections with highlighting of
+  the compatible targets
+- **Arrows**: direct relation (solid line), expression (dashed), dependency (dotted)
+- **Double-click settings**: Properties, Comments and Help tabs
+- Colored **comments** and **group boxes**
+- **Help for each node**, shown on hover and included in the model help window
+- **Extended outputs** `[Evo]`: algorithm outputs not bound to a parameter (number, text, HTML…)
+- Undo / redo, zoom, snapping to grid, **dark theme**
+- Docks: inputs, algorithms (search, drag and drop), properties, variables
+- Validation, execution (F5), saving to a file or into the project
+- Exports: image, PDF, SVG, Python script
 
-Les fonctionnalités qui n'existent pas dans le modeleur d'origine portent le badge **Evo**. Elles sont
-enregistrées dans le `.model3` sans le rendre invalide, mais l'ancien modeleur les ignore.
+### "Evo" badge
 
-## Compatibilité
+Features that do not exist in the original modeler carry the **Evo** badge. They are saved in the
+`.model3` without making it invalid, but the original modeler ignores them.
 
-- QGIS 3.34 à 4.x
-- Qt5 et Qt6
+## Compatibility
 
-## Langues
+- QGIS 3.34 to 4.x
+- Qt5 and Qt6
 
-L'interface suit la langue de QGIS : **français** et **anglais** (langue par défaut pour toute autre
-langue). Les traductions sont des fichiers Qt Linguist dans `i18n/`. Pour en ajouter une, par exemple
-l'allemand :
+## Languages
+
+The interface follows the QGIS language: **English** (default for any other language) and
+**French**. Translations are Qt Linguist files in `i18n/`. To add one, for example German:
 
 ```bash
-python3 tools/update_translations.py --add de   # crée i18n/modeler_evo_de.ts
-linguist i18n/modeler_evo_de.ts                 # traduire (ou éditer le .ts directement)
-python3 tools/update_translations.py            # compile le .qm
+python3 tools/update_translations.py --add de   # creates i18n/modeler_evo_de.ts
+linguist i18n/modeler_evo_de.ts                 # translate (or edit the .ts file directly)
+python3 tools/update_translations.py            # compiles the .qm file
 ```
 
 ## Installation
 
-### Depuis une release (recommandé)
+### From a release (recommended)
 
-1. Télécharger le ZIP du plugin depuis la page des
-   [releases](https://github.com/naub1n/QGIS-ModelerEvo/releases).
-2. Dans QGIS : *Extensions → Installer/Gérer les extensions → Installer depuis un ZIP*.
-3. Cocher les extensions expérimentales dans les paramètres du gestionnaire d'extensions, puis
-   activer **ModelerEvo**.
+1. Download the plugin ZIP from the
+   [releases](https://github.com/naub1n/QGIS-ModelerEvo/releases) page.
+2. In QGIS: *Plugins → Manage and Install Plugins → Install from ZIP*.
+3. Enable experimental plugins in the plugin manager settings, then activate **ModelerEvo**.
 
-### Depuis le code source
+### From the source code
 
-Cloner le dépôt dans le dossier des plugins de votre profil QGIS, sous le nom `modeler_evo` :
+Clone the repository into the plugins folder of your QGIS profile, under the name `modeler_evo`:
 
 ```bash
 cd …/profiles/default/python/plugins
 git clone https://github.com/naub1n/QGIS-ModelerEvo.git modeler_evo
 ```
 
-## Signaler un problème
+## Usage
 
-Les anomalies et suggestions sont à déposer dans les
+- **Plugins → ModelerEvo** menu, toolbar icon, or **Processing** menu
+- In the Processing Toolbox: right-click a model → **Edit with ModelerEvo…**
+  (QGIS 3, and QGIS ≥ 4.4)
+
+## Reporting issues
+
+Bugs and suggestions can be reported in the
 [issues](https://github.com/naub1n/QGIS-ModelerEvo/issues).
 
-## Utilisation
+## Use of AI
 
-- Menu **Extensions → ModelerEvo**, icône de la barre d'outils, ou menu **Traitement**
-- Dans la boîte à outils Processing : clic droit sur un modèle → **Éditer avec ModelerEvo…**
-  (QGIS 3, et QGIS ≥ 4.4)
+This plugin was built with the help of artificial intelligence:
+[Claude Code](https://claude.com/claude-code) (Anthropic) was used as an assistant to write the code
+and the documentation. The design, specifications, functional choices and testing in QGIS were done
+by the author.
 
-## Utilisation de l'IA
+## License
 
-Ce plugin a été réalisé avec l'aide d'une intelligence artificielle :
-[Claude Code](https://claude.com/claude-code) (Anthropic) a servi d'assistant pour écrire le code et la
-documentation. La conception, les spécifications, les choix fonctionnels et les tests dans QGIS sont
-le fait de l'auteur.
-
-## Licence
-
-Distribué sous licence [GNU GPL v3.0](LICENSE) ou ultérieure.
+Distributed under the [GNU GPL v3.0](LICENSE) or later.

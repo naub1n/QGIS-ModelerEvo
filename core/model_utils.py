@@ -1,7 +1,7 @@
-"""Fonctions utilitaires autour de QgsProcessingModelAlgorithm.
+"""Utility functions around QgsProcessingModelAlgorithm.
 
-Le plugin n'introduit aucun format propre : tout est stocké dans le modèle
-Processing (.model3) afin de rester compatible avec le modeleur d'origine.
+The plugin does not introduce any format of its own: everything is stored in the
+Processing model (.model3) so as to remain compatible with the original modeler.
 """
 
 import html
@@ -22,7 +22,7 @@ from qgis.core import (
 from ..i18n import tr
 
 # --------------------------------------------------------------------------
-# Compatibilité des énumérations (QGIS 3.3x / QGIS 4)
+# Enum compatibility (QGIS 3.3x / QGIS 4)
 # --------------------------------------------------------------------------
 
 _SRC = getattr(Qgis, "ProcessingModelChildParameterSource", QgsProcessingModelChildParameterSource)
@@ -31,7 +31,7 @@ _SRC_NAMES = ("ModelParameter", "ChildOutput", "StaticValue", "Expression", "Exp
 
 
 def source_kind(src):
-    """Nom du type de source d'un paramètre d'algorithme enfant."""
+    """Source type name of a child algorithm parameter."""
     s = src.source()
     for name in _SRC_NAMES:
         value = getattr(_SRC, name, None)
@@ -62,7 +62,7 @@ def parameter_type_name(type_id):
 
 
 # --------------------------------------------------------------------------
-# Catégories de types (couleur des points d'accroche)
+# Type categories (color of the connection points)
 # --------------------------------------------------------------------------
 
 _CATEGORIES = {
@@ -101,7 +101,7 @@ def category(type_id):
 
 
 def _categories_compatible(src_cat, src_type, dst_cat, dst_type):
-    """Règles de repli si l'API de compatibilité de QGIS n'est pas disponible."""
+    """Fallback rules when the QGIS compatibility API is not available."""
     if src_type == "outputVariant" or dst_cat == "other":
         return True
     if src_cat == dst_cat:
@@ -121,11 +121,11 @@ def _categories_compatible(src_cat, src_type, dst_cat, dst_type):
 
 
 # --------------------------------------------------------------------------
-# Sources de paramètres
+# Parameter sources
 # --------------------------------------------------------------------------
 
 def source_key(src):
-    """Clé hashable d'une source « connectable » (entrée ou sortie d'algorithme)."""
+    """Hashable key of a "connectable" source (model input or algorithm output)."""
     kind = source_kind(src)
     if kind == "ModelParameter":
         return ("param", src.parameterName())
@@ -155,11 +155,11 @@ def _source_type_for_key(model, key):
 
 
 def compatible_keys(model, child_id, param):
-    """Ensemble des sources connectables à ``param`` de l'enfant ``child_id``.
+    """Set of the sources that can be connected to ``param`` of child ``child_id``.
 
-    Utilise l'API du modeleur d'origine (types acceptés par le type de paramètre
-    et détection des dépendances circulaires). Retourne ``None`` si l'API
-    n'est pas disponible.
+    Uses the API of the original modeler (types accepted by the parameter type
+    and detection of circular dependencies). Returns ``None`` if the API is not
+    available.
     """
     ptype = registry().parameterType(param.type())
     if ptype is None:
@@ -196,7 +196,7 @@ def is_compatible(model, child_id, param, key, cache=None):
         keys = compatible_keys(model, child_id, param)
     if keys is not None:
         return key in keys
-    # Repli heuristique
+    # Heuristic fallback
     if key[0] == "child":
         if key[1] == child_id:
             return False
@@ -225,7 +225,7 @@ def accepts_multiple(param):
 
 
 # --------------------------------------------------------------------------
-# Affichage des valeurs
+# Value display
 # --------------------------------------------------------------------------
 
 def format_value(value, param=None):
@@ -293,7 +293,7 @@ def is_default(param, sources):
 
 
 # --------------------------------------------------------------------------
-# Relations indirectes (paramètres utilisés dans des expressions)
+# Indirect relations (parameters used in expressions)
 # --------------------------------------------------------------------------
 
 _TEMPLATE = re.compile(r"\[%(.*?)%\]", re.S)
@@ -317,7 +317,7 @@ def safe_name(text, capitalize=False):
 
 
 def variable_map(model):
-    """Nom de variable d'expression -> clé de source."""
+    """Expression variable name -> source key."""
     mapping = {}
     for p in model.parameterDefinitions():
         mapping[p.name().lower()] = ("param", p.name())
@@ -379,13 +379,13 @@ def child_dependency_ids(child):
 
 
 # --------------------------------------------------------------------------
-# Aide (onglet « Aide » des noeuds)
+# Help ("Help" tab of the nodes)
 # --------------------------------------------------------------------------
-# - entrées : clé = nom du paramètre (format natif de QGIS : l'aide apparaît
-#   dans la fenêtre d'exécution du modèle) ;
-# - algorithmes : clé « MODELEREVO_STEP:<id> » ; ces aides sont insérées dans la
-#   description du modèle (ALG_DESC) entre deux marqueurs pour être visibles
-#   par l'utilisateur du modèle.
+# - inputs: key = parameter name (native QGIS format: the help is shown in the
+#   model execution dialog);
+# - algorithms: key "MODELEREVO_STEP:<id>"; these help texts are inserted into the
+#   model description (ALG_DESC) between two markers so that the model user can
+#   see them.
 
 STEP_PREFIX = "MODELEREVO_STEP:"
 OUTPUT_PREFIX = "MODELEREVO_OUTPUT:"
@@ -445,11 +445,11 @@ def set_child_help(model, child_id, text):
 
 
 # --------------------------------------------------------------------------
-# Sorties étendues (propres à ModelerEvo, non compatibles avec le modeleur d'origine)
+# Extended outputs (specific to ModelerEvo, not compatible with the original modeler)
 # --------------------------------------------------------------------------
 
 def is_extended_output(child, mo):
-    """Sortie de modèle non liée à un paramètre (nombre, texte, HTML…) : QGIS ne l'expose pas."""
+    """Model output not bound to a parameter (number, text, HTML…): QGIS does not expose it."""
     alg = child.algorithm()
     if alg is None or mo is None:
         return False
@@ -458,7 +458,7 @@ def is_extended_output(child, mo):
 
 
 def extended_outputs(model):
-    """Sorties étendues actives du modèle : liste de dict (name, child, child_output, description, type)."""
+    """Active extended outputs of the model: list of dicts (name, child, child_output, description, type)."""
     res = []
     for cid, child in model.childAlgorithms().items():
         alg = child.algorithm()
@@ -493,7 +493,7 @@ def rename_help_key(model, old, new):
 
 
 def sync_help(model):
-    """Insère l'aide des étapes dans la description du modèle."""
+    """Insert the help of the steps into the model description."""
     content = _help(model)
     children = model.childAlgorithms()
     for key in [k for k in content if k.startswith(STEP_PREFIX)]:
@@ -531,7 +531,7 @@ def sync_help(model):
 
 
 def unique_parameter_name(model, description, exclude=None):
-    base = safe_name(description).lower() or "parametre"
+    base = safe_name(description).lower() or "parameter"
     name, i = base, 2
     while model.parameterDefinition(name) is not None and name != exclude:
         name = f"{base}{i}"

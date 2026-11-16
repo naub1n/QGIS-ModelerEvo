@@ -2,19 +2,19 @@
 __pycache__/
 *.py[cod]
 
-# Journaux / fichiers locaux
+# Logs / local files
 crash.log
 *.log
 
-# Documentation de référence du modeleur d'origine (QGIS, CC BY-SA) : conservée en local seulement
+# Reference documentation of the original modeler (QGIS, CC BY-SA): kept locally only
 modeler.rst
 
-# Éditeurs / système
+# Editors / OS
 .vscode/
 .idea/
 *.swp
 .DS_Store
 Thumbs.db
 
-# Paramètres locaux de Claude Code (le CLAUDE.md du projet est versionné)
+# Local Claude Code settings (the project CLAUDE.md is versioned)
 .claude/settings.local.json

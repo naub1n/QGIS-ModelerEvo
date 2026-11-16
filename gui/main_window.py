@@ -1,4 +1,4 @@
-"""Fenêtre principale de ModelerEvo."""
+"""ModelerEvo main window."""
 
 import os
 
@@ -57,7 +57,7 @@ SETTINGS_PREFIX = "modeler_evo/"
 
 
 class SnapshotCommand(QUndoCommand):
-    """Commande d'annulation : état complet du modèle avant / après."""
+    """Undo command: full model state before / after."""
 
     def __init__(self, window, text, before, after):
         super().__init__(text)
@@ -120,7 +120,7 @@ class ModelerWindow(QMainWindow):
             else self.view.centerOn(0, 0)
         ModelerWindow.instances.append(self)
 
-    # ================================================================ interface
+    # ================================================================ user interface
     def _dock(self, title, widget, area, name):
         dock = QDockWidget(title, self)
         dock.setObjectName(name)
@@ -274,7 +274,7 @@ class ModelerWindow(QMainWindow):
         for d in self.docks:
             d.setVisible(on)
 
-    # ================================================================ état
+    # ================================================================ state
     def refresh_all(self):
         self.scene.rebuild()
         self.props_panel.set_values(self.model.name(), self.model.group())
@@ -323,11 +323,11 @@ class ModelerWindow(QMainWindow):
         self.message_bar.pushMessage("", text, lv, duration)
 
     def _new_position(self, width=DEFAULT_W, height=110, extra_right=0.0):
-        """Emplacement inoccupé le plus proche du centre de la vue."""
+        """Free location closest to the center of the view."""
         c = self.view.mapToScene(self.view.viewport().rect().center())
         return self.scene.free_position(c, width, height, extra_right)
 
-    # ================================================================ entrées
+    # ================================================================ inputs
     def add_input(self, type_id, pos=None):
         res = node_dialog.edit_parameter(self, self.model, type_id)
         if not res or res[0] is None:
@@ -362,7 +362,7 @@ class ModelerWindow(QMainWindow):
         new_param, comment, color, help_text = res
         self.begin_change()
         if new_param.description() != old_description:
-            # comme le modeleur d'origine : le nom suit la description modifiée
+            # as in the original modeler: the name follows the edited description
             new_param.setName(mu.unique_parameter_name(m, new_param.description(), exclude=name))
         else:
             new_param.setName(name)
@@ -382,7 +382,7 @@ class ModelerWindow(QMainWindow):
         mu.set_param_help(m, new_param.name(), help_text)
         self.end_change(tr("Edit input"))
 
-    # ================================================================ algorithmes
+    # ================================================================ algorithms
     def add_algorithm(self, alg_id, pos=None):
         alg = QgsApplication.processingRegistry().createAlgorithmById(alg_id)
         if alg is None:
@@ -431,8 +431,8 @@ class ModelerWindow(QMainWindow):
         new_child, help_text = res
         new_child.setChildId(cid)
         new_child.copyNonDefinitionPropertiesFromModel(m)
-        # La fenêtre d'origine ne connaît que les sorties de type destination : on conserve
-        # celles qu'elle ne gère pas (nombre, texte, HTML…) ajoutées avec le clic droit.
+        # The original dialog only knows destination outputs: keep the ones it does not
+        # handle (number, text, HTML…) that were added with the right-click menu.
         dest = {p.name() for p in alg.parameterDefinitions() if p.isDestination()}
         kept = {n: o for n, o in child.modelOutputs().items()
                 if o.childOutputName() not in dest and n not in new_child.modelOutputs()}
@@ -446,7 +446,7 @@ class ModelerWindow(QMainWindow):
         self.end_change(tr("Edit algorithm"))
         self._report_child_validity(cid)
 
-    # ================================================================ sorties du modèle
+    # ================================================================ model outputs
     def edit_output(self, key, comment_tab=False):
         cid, oname = key
         m = self.model
@@ -478,7 +478,7 @@ class ModelerWindow(QMainWindow):
         self.end_change(tr("Edit output"))
 
     def add_model_output(self, cid, out_name):
-        """Expose une sortie d'algorithme (de n'importe quel type) comme sortie du modèle."""
+        """Expose an algorithm output (of any type) as a model output."""
         child = self.model.childAlgorithm(cid)
         alg = child.algorithm()
         odef = alg.outputDefinition(out_name) if alg else None
@@ -526,7 +526,7 @@ class ModelerWindow(QMainWindow):
             self.model.deactivateChildAlgorithm(cid)
         self.end_change(tr("Activate algorithm") if active else tr("Deactivate algorithm"))
 
-    # ================================================================ connexions
+    # ================================================================ connections
     def connect_link(self, src_key, cid, pname, detach=None):
         m = self.model
         child = m.childAlgorithm(cid)
@@ -574,7 +574,7 @@ class ModelerWindow(QMainWindow):
         m.setChildAlgorithm(child)
         self.end_change(tr("Disconnect"))
 
-    # ================================================================ suppression
+    # ================================================================ deletion
     def _remove_input(self, name):
         if self.model.childAlgorithmsDependOnParameter(name):
             self.push_message(tr("Cannot delete “{0}”: algorithms depend on it.").format(name),
@@ -627,7 +627,7 @@ class ModelerWindow(QMainWindow):
         if not items:
             return
         self.begin_change()
-        # les algorithmes en aval d'abord pour lever les dépendances
+        # downstream algorithms first, to release the dependencies
         children = [i.key for i in items if isinstance(i, NodeItem) and i.kind == "child"]
         pending = list(children)
         for _ in range(len(pending) + 1):
@@ -649,7 +649,7 @@ class ModelerWindow(QMainWindow):
                 self._set_comment(i.node.kind, i.node.key, "")
         self.end_change(tr("Delete selection"))
 
-    # ================================================================ cadres de groupe
+    # ================================================================ group boxes
     def add_group_box(self, pos):
         box = QgsProcessingModelGroupBox(tr("Group"))
         sel = [i for i in self.scene.selectedItems() if isinstance(i, NodeItem)]
@@ -699,7 +699,7 @@ class ModelerWindow(QMainWindow):
         self.model.addGroupBox(box)
         self.end_change(tr("Edit group box"))
 
-    # ================================================================ requêtes de la scène
+    # ================================================================ scene requests
     def handle_request(self, action, kind, key, *args):
         editors = {"input": self.edit_input, "output": self.edit_output, "child": self.edit_algorithm}
         if action == "edit":
@@ -748,7 +748,7 @@ class ModelerWindow(QMainWindow):
                 for o in free:
                     label = f"{o.description() or o.name()}  ({o.type()})"
                     if alg.parameterDefinition(o.name()) is None:
-                        label = "[Evo] " + label  # sortie étendue : non compatible avec l'ancien modeleur
+                        label = "[Evo] " + label  # extended output: not compatible with the original modeler
                     sub.addAction(output_type_icon(o.type()), label,
                                   lambda n=o.name(): self.add_model_output(key, n))
             menu.addSeparator()
@@ -769,7 +769,7 @@ class ModelerWindow(QMainWindow):
         menu.addAction(tr("Zoom to full extent"), self.view.zoom_full)
         menu.exec(screen_pos)
 
-    # ================================================================ édition
+    # ================================================================ editing
     def select_all(self):
         for i in self.scene.items():
             if i.flags() & i.GraphicsItemFlag.ItemIsSelectable:
@@ -853,7 +853,7 @@ class ModelerWindow(QMainWindow):
             self.model.setParameterOrder(order)
             self.end_change(tr("Reorder inputs"), rebuild=False)
 
-    # ================================================================ fichiers
+    # ================================================================ files
     def _models_folder(self):
         try:
             from processing.modeler.ModelerUtils import ModelerUtils
@@ -956,7 +956,7 @@ class ModelerWindow(QMainWindow):
         self._update_title()
         self.push_message(tr("Model saved in the project. Remember to save the project."), "success")
 
-    # ================================================================ validation / exécution
+    # ================================================================ validation / execution
     def validate(self):
         try:
             ok, issues = self.model.validate()
@@ -969,12 +969,12 @@ class ModelerWindow(QMainWindow):
                                 tr("The model is not valid:") + "\n\n• " + "\n• ".join(issues))
 
     def _create_execution_dialog(self, alg):
-        """Fenêtre d'exécution d'un algorithme (QGIS 4 : widget Processing ; QGIS 3 : AlgorithmDialog).
+        """Execution dialog of an algorithm (QGIS 4: Processing widget; QGIS 3: AlgorithmDialog).
 
-        Retourne (fenêtre, None) ou (None, message d'erreur détaillé).
+        Returns (dialog, None) or (None, detailed error message).
         """
         errors = []
-        try:  # QGIS 4 : processing.gui.algorithm_widget.AlgorithmWidget
+        try:  # QGIS 4: processing.gui.algorithm_widget.AlgorithmWidget
             from qgis.gui import QgsProcessingAlgorithmWidgetBase
             from processing.gui.algorithm_widget import AlgorithmWidget
             base = QgsProcessingAlgorithmWidgetBase
@@ -985,7 +985,7 @@ class ModelerWindow(QMainWindow):
             return AlgorithmWidget(alg, False, self, flags), None
         except Exception as e:  # noqa: BLE001
             errors.append(f"algorithm_widget : {type(e).__name__}: {e}")
-        try:  # QGIS 4 : fabrique GUI
+        try:  # QGIS 4: GUI factory
             from qgis.gui import QgsGui
             factory = QgsGui.processingGuiRegistry().dialogFactory()
             if factory is not None:
@@ -1150,7 +1150,7 @@ class ModelerWindow(QMainWindow):
             fh.write(code)
         self.push_message(tr("Script exported: {0}").format(path), "success")
 
-    # ================================================================ fermeture
+    # ================================================================ closing
     def closeEvent(self, ev):  # noqa: N802
         if not self._confirm_discard():
             ev.ignore()

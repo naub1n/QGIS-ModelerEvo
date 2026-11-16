@@ -1,4 +1,4 @@
-"""Icônes et couleurs du modeleur."""
+"""Modeler icons and colors."""
 
 import math
 import os
@@ -24,29 +24,29 @@ from ..i18n import tr
 PLUGIN_ICON = os.path.join(os.path.dirname(os.path.dirname(__file__)), "icons", "icon.svg")
 
 NODE_COLORS = {
-    "input": "#2e9e5b",      # vert
-    "algorithm": "#2f6fde",  # bleu
-    "model": "#7b4fd6",      # violet
+    "input": "#2e9e5b",      # green
+    "algorithm": "#2f6fde",  # blue
+    "model": "#7b4fd6",      # purple
     "output": "#f08c00",     # orange
     "missing": "#d64545",
     "inactive": "#9aa3ad",
 }
 
-# Couleurs des points d'accroche (même code couleur que le modeleur d'origine)
+# Connection point colors (same color code as the original modeler)
 CATEGORY_COLORS = {
-    "boolean": "#43a047",   # vert
-    "enum": "#8e44ad",      # violet
-    "numeric": "#1e88e5",   # bleu
-    "text": "#5c6bc0",      # bleu ardoise
-    "vector": "#a1944f",    # kaki
+    "boolean": "#43a047",   # green
+    "enum": "#8e44ad",      # purple
+    "numeric": "#1e88e5",   # blue
+    "text": "#5c6bc0",      # slate blue
+    "vector": "#a1944f",    # khaki
     "raster": "#16a99a",    # turquoise
-    "file": "#4b4f56",      # gris foncé
-    "other": "#9aa0a6",     # gris moyen
+    "file": "#4b4f56",      # dark grey
+    "other": "#9aa0a6",     # medium grey
 }
 
 ACCENT = "#ff8f00"
 
-# Icône du thème QGIS par type d'entrée (repli : pastille dessinée)
+# QGIS theme icon for each input type (fallback: drawn badge)
 _THEME_ICONS = {
     "vector": "/mIconVector.svg",
     "source": "/mIconPolygonLayer.svg",
@@ -80,7 +80,7 @@ _THEME_ICONS = {
     "coordinateoperation": "/mActionReprojectLayer.svg",
 }
 
-# Icône du thème QGIS par type de sortie (repli : pastille dessinée)
+# QGIS theme icon for each output type (fallback: drawn badge)
 _OUTPUT_ICONS = {
     "outputVector": "/mIconVector.svg",
     "outputRaster": "/mIconRaster.svg",
@@ -121,7 +121,7 @@ def _transparent_pixmap(size):
 
 
 def gear_path(cx, cy, r_out, teeth=8):
-    """Chemin d'une roue crantée."""
+    """Path of a gear wheel."""
     r_in = r_out * 0.76
     n = teeth * 4
     pts = []
@@ -182,7 +182,7 @@ def _theme_icon(name):
 
 
 def input_type_icon(type_id):
-    """Icône spécifique à chaque type d'entrée."""
+    """Icon specific to each input type."""
     key = ("input", type_id)
     if key not in _cache:
         icon = _theme_icon(_THEME_ICONS.get(type_id))
@@ -201,7 +201,7 @@ def model_icon():
 
 
 def output_type_icon(type_id):
-    """Icône représentant le type d'une sortie (couche, fichier, nombre, texte…)."""
+    """Icon representing the type of an output (layer, file, number, text…)."""
     key = ("output-type", type_id)
     if key not in _cache:
         icon = _theme_icon(_OUTPUT_ICONS.get(type_id))
@@ -228,7 +228,7 @@ def plugin_icon():
     return QIcon(PLUGIN_ICON)
 
 
-# Fonctionnalités propres à ModelerEvo, non compatibles avec le modeleur d'origine :
-# toujours signalées par le badge « Evo » (couleur EVO_COLOR) et ce texte.
+# Features specific to ModelerEvo, not compatible with the original modeler:
+# always flagged with the "Evo" badge (EVO_COLOR) and this text.
 EVO_COLOR = "#7e57c2"
 EVO_TEXT = tr("ModelerEvo feature, not compatible with the original modeler")

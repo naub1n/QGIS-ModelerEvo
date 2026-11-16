@@ -1,8 +1,8 @@
-"""Traduction de l'interface.
+"""User interface translation.
 
-Les textes du code sont en anglais et passent par ``tr()`` ; les traductions sont des
-fichiers Qt Linguist ``i18n/modeler_evo_<langue>.ts``, compilés en ``.qm`` (voir
-``tools/update_translations.py``). La langue est celle de l'interface de QGIS.
+Texts in the code are written in English and go through ``tr()``; translations are
+Qt Linguist files ``i18n/modeler_evo_<language>.ts``, compiled to ``.qm`` (see
+``tools/update_translations.py``). The language is the one of the QGIS user interface.
 """
 
 import os
@@ -16,12 +16,12 @@ _translator = None
 
 
 def tr(text):
-    """Texte traduit dans la langue de QGIS (``text`` est la version anglaise)."""
+    """Text translated into the QGIS language (``text`` is the English version)."""
     return QCoreApplication.translate(CONTEXT, text)
 
 
 def qgis_language():
-    """Code à deux lettres de la langue de l'interface de QGIS (ex. « fr »)."""
+    """Two-letter code of the QGIS user interface language (e.g. "fr")."""
     locale = ""
     try:
         from qgis.core import QgsApplication
@@ -38,10 +38,10 @@ def qgis_language():
 
 
 def install_translator():
-    """Charge la traduction correspondant à la langue de QGIS (si elle existe).
+    """Load the translation matching the QGIS language (if there is one).
 
-    À appeler avant d'importer les modules du plugin : certains libellés sont
-    traduits au chargement du module.
+    Must be called before importing the plugin modules: some labels are
+    translated when their module is loaded.
     """
     global _translator
     if _translator is not None:

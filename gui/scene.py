@@ -1,4 +1,4 @@
-"""Scène du modeleur : construit les éléments à partir du modèle Processing."""
+"""Modeler scene: builds the items from the Processing model."""
 
 from qgis.PyQt.QtCore import QSettings, QPointF, QRectF, QSizeF, Qt, QTimer
 from qgis.PyQt.QtGui import QColor, QPainterPath, QPen
@@ -31,7 +31,7 @@ class ModelScene(QGraphicsScene):
         self.groups = []
         self.edges = []
         self._drag = None
-        self.z_order = {}  # (type, clé) -> z : l'ordre d'empilement survit aux reconstructions
+        self.z_order = {}  # (kind, key) -> z: the stacking order survives rebuilds
         self._z_top = 10
         self.setSceneRect(QRectF(-4000, -4000, 8000, 8000))
 
@@ -39,7 +39,7 @@ class ModelScene(QGraphicsScene):
     def model(self):
         return self.window.model
 
-    # ------------------------------------------------------------ premier plan
+    # ------------------------------------------------------------ bring to front
     def bring_to_front(self, node):
         k = (node.kind, node.key)
         if self.z_order.get(k) == self._z_top and node.zValue() == self._z_top:
@@ -49,7 +49,7 @@ class ModelScene(QGraphicsScene):
         node.setZValue(self._z_top)
 
     def focus_node(self, kind, key):
-        """Place le noeud au premier plan et le sélectionne (après un ajout)."""
+        """Bring the node to the front and select it (after adding it)."""
         node = {"input": self.inputs, "child": self.children, "output": self.outputs}[kind].get(key)
         if node is None:
             return
@@ -58,7 +58,7 @@ class ModelScene(QGraphicsScene):
         node.setSelected(True)
 
     def free_position(self, anchor, width, height, extra_right=0.0, margin=30.0):
-        """Centre d'un emplacement inoccupé, le plus proche de `anchor` (pas de 40 px)."""
+        """Center of a free location, closest to `anchor` (40 px step)."""
         busy = [i.sceneBoundingRect().adjusted(-margin, -margin, margin, margin)
                 for i in list(self.inputs.values()) + list(self.children.values())
                 + list(self.outputs.values()) + self.comments if i.isVisible()]
@@ -76,7 +76,7 @@ class ModelScene(QGraphicsScene):
                         return c
         return QPointF(anchor)
 
-    # ------------------------------------------------------------ construction
+    # ------------------------------------------------------------ building
     def rebuild(self):
         selected = {(getattr(i, "kind", "group"), getattr(i, "key", getattr(i, "uuid", None)))
                     for i in self.selectedItems()}
@@ -145,7 +145,7 @@ class ModelScene(QGraphicsScene):
     def _build_edges(self):
         m = self.model
         vmap = mu.variable_map(m)
-        # Relations entre entrées (ex. champ -> couche parente)
+        # Relations between inputs (e.g. field -> parent layer)
         for name, node in self.inputs.items():
             p = m.parameterDefinition(name)
             for dep in (p.dependsOnOtherParameters() or []):
@@ -185,7 +185,7 @@ class ModelScene(QGraphicsScene):
                                    tr("Dependency: {0} runs before {1}").format(src.title, node.title))
 
     def _build_output_edges(self):
-        """Flèche de chaque sortie d'algorithme vers son noeud de sortie (orange)."""
+        """Arrow from each algorithm output to its (orange) output node."""
         m = self.model
         for (cid, oname), onode in self.outputs.items():
             cnode = self.children.get(cid)
@@ -209,13 +209,13 @@ class ModelScene(QGraphicsScene):
         for c in self.comments:
             c.setVisible(show)
 
-    # ------------------------------------------------------------ requêtes différées
+    # ------------------------------------------------------------ deferred requests
     def request(self, action, kind, key, *args):
-        """Les actions qui reconstruisent la scène sont différées pour ne pas
-        détruire un élément pendant le traitement de son propre évènement."""
+        """Actions that rebuild the scene are deferred so that an item is not
+        destroyed while its own event is being processed."""
         QTimer.singleShot(0, lambda: self.window.handle_request(action, kind, key, *args))
 
-    # ------------------------------------------------------------ géométrie -> modèle
+    # ------------------------------------------------------------ geometry -> model
     def commit_layout(self, text):
         m = self.model
         before = m.toVariant()
@@ -248,7 +248,7 @@ class ModelScene(QGraphicsScene):
             child = m.childAlgorithm(cid)
             if oname not in child.modelOutputs():
                 continue
-            apply(child.modelOutput(oname), node)  # référence dans `child`, qui reste vivant
+            apply(child.modelOutput(oname), node)  # reference inside `child`, which stays alive
             m.setChildAlgorithm(child)
         boxes = {b.uuid(): b for b in m.groupBoxes()}
         for g in self.groups:
@@ -261,7 +261,7 @@ class ModelScene(QGraphicsScene):
         if changed:
             self.window.push_snapshot(text, before)
 
-    # ------------------------------------------------------------ connexions à la souris
+    # ------------------------------------------------------------ mouse connections
     def _node_at(self, pos):
         for it in self.items(pos):
             if isinstance(it, NodeItem):
@@ -306,7 +306,7 @@ class ModelScene(QGraphicsScene):
             else:
                 drag.update(mode="reverse", target=(node.key, name), anchor=(node, name))
 
-        # points d'accroche compatibles mis en évidence
+        # highlight the compatible connection points
         targets = set()
         if drag["mode"] == "forward":
             for cid, cnode in self.children.items():
@@ -386,15 +386,15 @@ class ModelScene(QGraphicsScene):
             key = tnode.source_key_for_output(hit[1])
             QTimer.singleShot(0, lambda: self.window.connect_link(key, *d["target"], None))
 
-    # ------------------------------------------------------------ menu du canevas
+    # ------------------------------------------------------------ canvas menu
     def contextMenuEvent(self, ev):
         super().contextMenuEvent(ev)
         if not ev.isAccepted():
             self.window.canvas_context_menu(ev.scenePos(), ev.screenPos())
 
-    # ------------------------------------------------------------ fond
+    # ------------------------------------------------------------ background
     def palette(self):
-        """Palette courante (l'export image reste toujours clair)."""
+        """Current palette (exports always use the light theme)."""
         return DARK if self.dark and not self.exporting else LIGHT
 
     def set_dark(self, on):
@@ -471,7 +471,7 @@ class ModelView(QGraphicsView):
             self.zoom_by(1.0015 ** delta)
         ev.accept()
 
-    # déplacement (clic molette ou espace + clic)
+    # panning (middle click)
     def mousePressEvent(self, ev):
         if ev.button() == Qt.MouseButton.MiddleButton:
             self._pan = ev.position() if hasattr(ev, "position") else QPointF(ev.pos())
@@ -499,14 +499,14 @@ class ModelView(QGraphicsView):
             return
         super().mouseReleaseEvent(ev)
 
-    # glisser-déposer depuis les panneaux
+    # drag and drop from the panels
     @staticmethod
     def _accepts(mime):
         return mime.hasFormat(ALG_MIME) or mime.hasFormat(PARAM_MIME)
 
     @staticmethod
     def _decode_id(data):
-        """Identifiant dans le MIME : QDataStream (arbre natif QGIS) ou UTF-8 brut (arbre de repli)."""
+        """Id stored in the MIME data: QDataStream (native QGIS tree) or raw UTF-8 (fallback tree)."""
         from qgis.PyQt.QtCore import QByteArray, QDataStream, QIODevice
         raw = QByteArray(data)
         stream = QDataStream(raw, QIODevice.OpenModeFlag.ReadOnly)

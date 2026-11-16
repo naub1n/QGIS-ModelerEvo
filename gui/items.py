@@ -1,4 +1,4 @@
-"""Éléments graphiques du canevas : noeuds, liens, commentaires, cadres de groupe."""
+"""Canvas graphic items: nodes, links, comments, group boxes."""
 
 import html
 import math
@@ -57,7 +57,7 @@ def _draw_text(p, rect, text, align, font, color, elide=True):
 
 
 def draw_evo_badge(p, rect):
-    """Badge « Evo » : marque une fonctionnalité non compatible avec le modeleur d'origine."""
+    """The "Evo" badge: flags a feature that is not compatible with the original modeler."""
     p.save()
     p.setPen(Qt.PenStyle.NoPen)
     p.setBrush(QColor(EVO_COLOR))
@@ -86,12 +86,12 @@ class Row:
 
 
 # ==========================================================================
-# Noeud
+# Node
 # ==========================================================================
 
 class NodeItem(QGraphicsItem):
-    """Noeud d'entrée (kind='input'), d'algorithme (kind='child') ou de sortie du
-    modèle (kind='output', clé = (id de l'algorithme, nom de la sortie))."""
+    """Input node (kind='input'), algorithm node (kind='child') or model output
+    node (kind='output', key = (algorithm id, output name))."""
 
     def __init__(self, mscene, kind, key):
         super().__init__()
@@ -115,7 +115,7 @@ class NodeItem(QGraphicsItem):
         self.rows = []
         self.refresh()
 
-    # ---------------------------------------------------------------- données
+    # ---------------------------------------------------------------- data
     @property
     def model(self):
         return self.mscene.model
@@ -124,7 +124,7 @@ class NodeItem(QGraphicsItem):
         if self.kind == "input":
             return self.model.parameterComponent(self.key)
         if self.kind == "output":
-            # la copie de l'algorithme est conservée : modelOutput() renvoie une référence
+            # keep the algorithm copy alive: modelOutput() returns a reference
             cid, oname = self.key
             self._owner = self.model.childAlgorithm(cid)
             return self._owner.modelOutput(oname)
@@ -207,7 +207,7 @@ class NodeItem(QGraphicsItem):
         self.update()
 
     def _refresh_output(self):
-        """Noeud orange d'une sortie du modèle (définie dans les propriétés de l'algorithme)."""
+        """Orange node of a model output (defined in the algorithm properties)."""
         m = self.model
         cid, oname = self.key
         child = m.childAlgorithm(cid)
@@ -233,7 +233,7 @@ class NodeItem(QGraphicsItem):
         self.setToolTip(self.tooltip_html)
 
     def _default_output_pos(self):
-        """Position par défaut (sortie sans position enregistrée) : à droite de l'algorithme."""
+        """Default position (output without a saved position): right of the algorithm."""
         cid, oname = self.key
         child = self.model.childAlgorithm(cid)
         idx = list(child.modelOutputs().keys()).index(oname) if oname in child.modelOutputs() else 0
@@ -246,7 +246,7 @@ class NodeItem(QGraphicsItem):
         return (f"<b>{html.escape(title)}</b><br/><span style='color:#666'>"
                 f"{html.escape(subtitle)}</span><hr/>{body}")
 
-    # ---------------------------------------------------------------- géométrie
+    # ---------------------------------------------------------------- geometry
     def n_inputs(self):
         return sum(1 for r in self.rows if r.side == "in")
 
@@ -315,7 +315,7 @@ class NodeItem(QGraphicsItem):
         r = self.rect()
         return local.x() >= r.right() - GRIP and local.y() >= r.bottom() - GRIP
 
-    # ---------------------------------------------------------------- dessin
+    # ---------------------------------------------------------------- painting
     def paint(self, p, option, widget=None):
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
         r = self.rect()
@@ -325,24 +325,24 @@ class NodeItem(QGraphicsItem):
         color = QColor(NODE_COLORS["inactive"] if not self.active else NODE_COLORS[self.node_type])
         p.setOpacity(1.0 if self.active else 0.65)
 
-        # ombre
+        # shadow
         p.setPen(Qt.PenStyle.NoPen)
         p.setBrush(QColor(*pal["shadow"]))
         p.drawRoundedRect(r.translated(0, 3), RADIUS, RADIUS)
 
-        # corps
+        # body
         body = QPainterPath()
         body.addRoundedRect(r, RADIUS, RADIUS)
         p.fillPath(body, QColor(pal["body"]))
 
-        # en-tête
+        # header
         head = QPainterPath()
         head.addRect(QRectF(r.left(), r.top(), r.width(), HEADER_H))
         p.fillPath(body.intersected(head), color)
         if status == "outdated":
             p.fillPath(body.intersected(head), QColor(255, 143, 0, 90))
 
-        # icône à côté du nom
+        # icon next to the name
         icon_rect = QRectF(r.left() + 10, r.top() + 11, 28, 28)
         if self.kind == "input":
             p.setBrush(QColor(255, 255, 255, 235))
@@ -355,7 +355,7 @@ class NodeItem(QGraphicsItem):
         else:
             self.icon.paint(p, icon_rect.adjusted(1, 1, -1, -1).toRect())
 
-        # nom et sous-titre
+        # name and subtitle
         right_pad = 34 if status else (52 if self.evo_only else 12)
         text_w = r.width() - 48 - right_pad
         _draw_text(p, QRectF(r.left() + 46, r.top() + 8, text_w, 18), self.title,
@@ -377,13 +377,13 @@ class NodeItem(QGraphicsItem):
             p.setPen(pen)
             p.drawPolyline(QPolygonF([c + QPointF(-4, 0), c + QPointF(-1, 3.5), c + QPointF(4.5, -3.5)]))
 
-        # point de raccord d'un noeud de sortie (alimenté par la flèche de l'algorithme)
+        # connection point of an output node (fed by the arrow from the algorithm)
         if self.kind == "output":
             p.setPen(QPen(color.darker(120), 2))
             p.setBrush(QColor(pal["socket_empty"]))
             p.drawEllipse(QPointF(r.left(), r.top() + HEADER_H / 2), SOCKET_R, SOCKET_R)
 
-        # lignes d'entrées / sorties
+        # input / output rows
         n_in = self.n_inputs()
         if n_in and n_in < len(self.rows):
             y = self._row_rects[n_in].top() - 4
@@ -394,7 +394,7 @@ class NodeItem(QGraphicsItem):
         for row, rr in zip(self.rows, self._row_rects):
             self._paint_row(p, row, rr, r, targets, pal)
 
-        # contour
+        # outline
         p.setBrush(Qt.BrushStyle.NoBrush)
         if selected:
             p.setPen(QPen(QColor("#8a4b00" if self.kind == "output" else ACCENT), 2.2))
@@ -402,7 +402,7 @@ class NodeItem(QGraphicsItem):
             p.setPen(QPen(QColor(pal["outline"]), 1))
         p.drawRoundedRect(r, RADIUS, RADIUS)
 
-        # poignée de redimensionnement
+        # resize handle
         if not self.mscene.exporting:
             p.setPen(QPen(QColor(pal["grip"]), 1.2))
             for k in (4, 8, 12):
@@ -530,15 +530,15 @@ class NodeItem(QGraphicsItem):
 
 
 # ==========================================================================
-# Liens
+# Links
 # ==========================================================================
 
 class EdgeItem(QGraphicsPathItem):
-    """Flèche entre deux paramètres.
+    """Arrow between two parameters.
 
-    style : 'direct' (trait plein), 'expression' (pointillés : paramètre utilisé
-    dans une expression), 'dependency' (dépendance explicite), 'parent'
-    (paramètre dépendant d'un autre paramètre).
+    style: 'direct' (solid line), 'expression' (dashed: parameter used in an
+    expression), 'dependency' (explicit dependency), 'parent' (parameter that
+    depends on another parameter).
     """
 
     def __init__(self, src, src_name, dst, dst_name, style, color, tooltip=""):
@@ -615,7 +615,7 @@ class EdgeItem(QGraphicsPathItem):
 
 
 # ==========================================================================
-# Commentaires
+# Comments
 # ==========================================================================
 
 class CommentItem(QGraphicsItem):
@@ -715,7 +715,7 @@ class CommentItem(QGraphicsItem):
 
 
 # ==========================================================================
-# Cadres de groupe
+# Group boxes
 # ==========================================================================
 
 class GroupBoxItem(QGraphicsItem):

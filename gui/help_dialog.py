@@ -1,4 +1,4 @@
-"""Édition de l'aide du modèle (description, entrées, sorties, étapes, auteur…)."""
+"""Model help editor (description, inputs, outputs, steps, author…)."""
 
 from qgis.PyQt.QtCore import Qt
 from qgis.PyQt.QtWidgets import (

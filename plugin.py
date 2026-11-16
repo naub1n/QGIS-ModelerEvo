@@ -1,4 +1,4 @@
-"""Point d'entrée du plugin ModelerEvo."""
+"""ModelerEvo plugin entry point."""
 
 try:  # Qt6
     from qgis.PyQt.QtGui import QAction
@@ -36,23 +36,23 @@ class ModelerEvoPlugin:
 
         self._register_toolbox_action()
 
-        # Également dans le menu Traitement, à côté du modeleur d'origine
+        # Also in the Processing menu, next to the original modeler
         self.processing_menu = self._find_processing_menu()
         if self.processing_menu is not None:
             self.processing_menu.addAction(self.action_new)
 
     @staticmethod
     def _model_path(algorithm_name):
-        """Chemin du .model3 d'un modèle de la boîte à outils (None si ce n'est pas un modèle fichier)."""
+        """Path of the .model3 of a Processing Toolbox model (None if it is not a file-based model)."""
         alg = QgsApplication.processingRegistry().createAlgorithmById(f"model:{algorithm_name}")
         if alg is None:
             return None
         return getattr(alg, "sourceFilePath", lambda: "")() or None
 
     def _register_toolbox_action(self):
-        """Ajoute « Éditer avec ModelerEvo… » au menu contextuel des modèles de la boîte à outils."""
+        """Add "Edit with ModelerEvo…" to the context menu of the Processing Toolbox models."""
         plugin = self
-        try:  # QGIS >= 4.4 : API C++ du registre GUI de Processing
+        try:  # QGIS >= 4.4: C++ API of the Processing GUI registry
             from qgis.gui import QgsGui, QgsProcessingToolboxContextAction
             registry = QgsGui.processingGuiRegistry()
             register = registry.registerProviderToolboxContextAction
@@ -79,11 +79,11 @@ class ModelerEvoPlugin:
         self._new_api = True
 
     def _register_legacy_toolbox_action(self):
-        """QGIS 3.x : liste de ContextAction de processing.gui.ProviderActions."""
+        """QGIS 3.x: ContextAction list of processing.gui.ProviderActions."""
         try:
             from processing.gui.ContextAction import ContextAction
             from processing.gui.ProviderActions import ProviderContextMenuActions
-        except ImportError:  # Processing indisponible
+        except ImportError:  # Processing not available
             return
         plugin = self
 

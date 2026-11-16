@@ -1,7 +1,7 @@
-"""Menu de paramétrage d'un noeud : onglets Propriétés, Commentaires et Aide.
+"""Node settings dialog: Properties, Comments and Help tabs.
 
-Les onglets « Propriétés » et « Commentaires » sont ceux des dialogues du
-modeleur d'origine (fonctionnement identique) ; l'onglet « Aide » est ajouté.
+The "Properties" and "Comments" tabs are those of the original modeler dialogs
+(identical behavior); the "Help" tab is added.
 """
 
 from qgis.core import QgsProject
@@ -60,7 +60,7 @@ def create_widget_context(model):
 
 
 def _main_tab_widget(dlg):
-    """Le QTabWidget de plus haut niveau du dialogue (Propriétés / Commentaires)."""
+    """Top-level QTabWidget of the dialog (Properties / Comments)."""
     best, best_depth = None, None
     for tw in dlg.findChildren(QTabWidget):
         depth, w = 0, tw.parentWidget()
@@ -84,9 +84,9 @@ def _help_editor(text):
 
 
 def install_tabs(dlg, help_text):
-    """Renomme les onglets d'origine et ajoute l'onglet « Aide ».
+    """Rename the original tabs and add the "Help" tab.
 
-    Retourne l'éditeur de l'aide.
+    Returns the help editor.
     """
     editor = _help_editor(help_text)
     tabs = _main_tab_widget(dlg)
@@ -124,9 +124,9 @@ def _call(obj, name, *args):
 
 def edit_parameter(parent, model, type_id, existing=None, comment="", comment_color=None,
                    help_text="", comment_tab=False):
-    """Dialogue de définition d'une entrée du modèle.
+    """Definition dialog of a model input.
 
-    Retourne (paramètre, commentaire, couleur, aide) ou None si annulé.
+    Returns (parameter, comment, color, help) or None if cancelled.
     """
     legacy_cls = None
     try:
@@ -176,9 +176,9 @@ def edit_parameter(parent, model, type_id, existing=None, comment="", comment_co
 
 
 def edit_algorithm(parent, model, alg, child=None, help_text="", comment_tab=False):
-    """Dialogue de paramétrage d'un algorithme du modèle.
+    """Settings dialog of a model algorithm.
 
-    Retourne (QgsProcessingModelChildAlgorithm, aide) ou None si annulé.
+    Returns (QgsProcessingModelChildAlgorithm, help) or None if cancelled.
     """
     from processing.modeler.ModelerParametersDialog import ModelerParametersDialog
     if child is not None:
@@ -200,9 +200,9 @@ def edit_algorithm(parent, model, alg, child=None, help_text="", comment_tab=Fal
 
 def edit_output(parent, description, source, comment="", comment_color=None, help_text="",
                 comment_tab=False, evo_only=False):
-    """Dialogue de paramétrage d'une sortie du modèle (onglets Propriétés, Commentaires, Aide).
+    """Settings dialog of a model output (Properties, Comments, Help tabs).
 
-    Retourne (description, commentaire, couleur, aide) ou None si annulé.
+    Returns (description, comment, color, help) or None if cancelled.
     """
     dlg = QDialog(parent)
     dlg.setWindowTitle(tr("Model output"))

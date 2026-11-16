@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-"""Met à jour les traductions de ModelerEvo (fichiers Qt Linguist).
+"""Update the ModelerEvo translations (Qt Linguist files).
 
-1. Extrait du code tous les textes passés à ``tr("...")`` (le texte anglais).
-2. Met à jour chaque ``i18n/modeler_evo_<langue>.ts`` : les traductions existantes sont
-   conservées, les nouveaux textes sont ajoutés « à traduire » (``unfinished``), les textes
-   qui n'existent plus dans le code sont retirés.
-3. Compile les ``.ts`` en ``.qm`` avec ``lrelease`` (Qt 5 ou 6), s'il est disponible.
+1. Extract from the code every text passed to ``tr("...")`` (the English text).
+2. Update each ``i18n/modeler_evo_<language>.ts``: existing translations are kept,
+   new texts are added as "to translate" (``unfinished``), texts that no longer
+   exist in the code are removed.
+3. Compile the ``.ts`` files to ``.qm`` with ``lrelease`` (Qt 5 or 6), if available.
 
-Usage :
-    python3 tools/update_translations.py            # met à jour et compile toutes les langues
-    python3 tools/update_translations.py --add de   # ajoute une nouvelle langue (allemand)
-    python3 tools/update_translations.py --check    # échoue s'il reste des textes à traduire
+Usage:
+    python3 tools/update_translations.py            # update and compile all languages
+    python3 tools/update_translations.py --add de   # add a new language (German)
+    python3 tools/update_translations.py --check    # fail if some texts are not translated
 
-Les traductions se saisissent avec Qt Linguist (``linguist i18n/modeler_evo_fr.ts``) ou
-directement dans le fichier ``.ts``. Seul le module Python standard est nécessaire ;
-``lrelease`` s'installe avec les outils Qt (Debian/Ubuntu : ``qt6-l10n-tools``).
+Translations are entered with Qt Linguist (``linguist i18n/modeler_evo_fr.ts``) or
+directly in the ``.ts`` file. Only the Python standard library is required;
+``lrelease`` comes with the Qt tools (Debian/Ubuntu: ``qt6-l10n-tools``).
 """
 
 import argparse
@@ -27,7 +27,7 @@ import xml.etree.ElementTree as ET
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 I18N_DIR = os.path.join(ROOT, "i18n")
-CONTEXT = "ModelerEvo"  # identique à i18n.CONTEXT
+CONTEXT = "ModelerEvo"  # same as i18n.CONTEXT
 PREFIX = "modeler_evo_"
 EXCLUDED_DIRS = {"tools", "i18n", "__pycache__", ".git", ".claude"}
 
@@ -41,7 +41,7 @@ def source_files():
 
 
 def extract():
-    """Textes à traduire : {texte anglais: [(fichier relatif, ligne), …]}, dans l'ordre du code."""
+    """Texts to translate: {English text: [(relative file, line), …]}, in code order."""
     messages = {}
     for path in source_files():
         rel = os.path.relpath(path, ROOT).replace(os.sep, "/")
@@ -54,14 +54,14 @@ def extract():
                 continue
             arg = call.args[0]
             if not (isinstance(arg, ast.Constant) and isinstance(arg.value, str)):
-                print(f"Attention : {rel}:{call.lineno} : tr() sans texte littéral (ignoré)", file=sys.stderr)
+                print(f"Warning: {rel}:{call.lineno}: tr() without a literal text (ignored)", file=sys.stderr)
                 continue
             messages.setdefault(arg.value, []).append((rel, call.lineno))
     return messages
 
 
 def read_ts(path):
-    """{texte anglais: (traduction, terminée ?)} d'un fichier .ts existant."""
+    """{English text: (translation, finished?)} from an existing .ts file."""
     result = {}
     if not os.path.exists(path):
         return result
@@ -110,14 +110,14 @@ def find_lrelease():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--add", metavar="LANGUE", help="ajoute une langue (code à deux lettres, ex. de)")
-    parser.add_argument("--check", action="store_true", help="échoue s'il reste des textes à traduire")
-    parser.add_argument("--no-compile", action="store_true", help="ne pas générer les .qm")
+    parser.add_argument("--add", metavar="LANGUAGE", help="add a language (two-letter code, e.g. de)")
+    parser.add_argument("--check", action="store_true", help="fail if some texts are not translated")
+    parser.add_argument("--no-compile", action="store_true", help="do not generate the .qm files")
     args = parser.parse_args()
 
     os.makedirs(I18N_DIR, exist_ok=True)
     messages = extract()
-    print(f"{len(messages)} textes à traduire dans le code")
+    print(f"{len(messages)} translatable texts in the code")
 
     languages = sorted(f[len(PREFIX):-3] for f in os.listdir(I18N_DIR)
                        if f.startswith(PREFIX) and f.endswith(".ts"))
@@ -128,25 +128,25 @@ def main():
     for lang in languages:
         ts = os.path.join(I18N_DIR, f"{PREFIX}{lang}.ts")
         todo, removed = write_ts(ts, lang, messages, read_ts(ts))
-        print(f"  {lang} : {len(messages) - todo} traduits, {todo} à traduire"
-              + (f", {len(removed)} retirés" if removed else ""))
+        print(f"  {lang}: {len(messages) - todo} translated, {todo} to translate"
+              + (f", {len(removed)} removed" if removed else ""))
         for r in removed:
-            print(f"      retiré : {r!r}")
+            print(f"      removed: {r!r}")
         incomplete |= todo > 0
 
     if not args.no_compile:
         lrelease = find_lrelease()
         if lrelease is None:
-            print("lrelease introuvable : les .qm ne sont pas régénérés (installer les outils Qt).",
+            print("lrelease not found: the .qm files are not regenerated (install the Qt tools).",
                   file=sys.stderr)
             return 1
         for lang in languages:
             ts = os.path.join(I18N_DIR, f"{PREFIX}{lang}.ts")
             subprocess.run([lrelease, "-silent", ts, "-qm", ts[:-3] + ".qm"], check=True)
-        print("Fichiers .qm générés")
+        print(".qm files generated")
 
     if args.check and incomplete:
-        print("Des textes restent à traduire.", file=sys.stderr)
+        print("Some texts still need to be translated.", file=sys.stderr)
         return 1
     return 0
 
