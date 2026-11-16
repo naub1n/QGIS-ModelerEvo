@@ -9,8 +9,11 @@ sont à respecter.
 - Version 0.1.0, expérimental (voir `metadata.txt`)
 - Nom du plugin : **ModelerEvo** (ne pas le franciser) ; badge « Evo » ; dossier `modeler_evo`
 - Licence GPL-3.0-or-later (`LICENSE`, champ `license` de `metadata.txt`)
-- Dépôt git destiné à GitHub ; à chaque nouvelle version, mettre à jour `version` et `changelog` dans
-  `metadata.txt`
+- Dépôt GitHub : https://github.com/naub1n/QGIS-ModelerEvo ; à chaque nouvelle version, mettre à jour
+  `version` et `changelog` dans `metadata.txt`
+- Les utilisateurs installent le plugin depuis le ZIP versionné publié dans les releases GitHub (dossier
+  racine `modeler_evo/`, sans `.claude/` ni `.gitignore`), par ex. :
+  `git archive --prefix=modeler_evo/ -o modeler_evo-<version>.zip HEAD -- . ':!.claude' ':!.gitignore'`
 
 ## Maintenance de ce fichier
 
