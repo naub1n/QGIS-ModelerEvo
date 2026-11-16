@@ -22,10 +22,10 @@ be followed.
      (`python3 tools/update_translations.py --check`), commit
   2. add an annotated tag `v<version>` (same as `version` in `metadata.txt`) on that commit:
      `git tag -a v<version> -m "ModelerEvo <version>"`
-  3. build the ZIP **from the tag**:
-     `git archive --prefix=modeler_evo/ -o modeler_evo-<version>.zip v<version> -- . ':!.claude' ':!.gitignore' ':!tools' ':!docs'`
+  3. build the ZIP **from the tag**, into the local `releases/` folder (ignored by git):
+     `git archive --prefix=modeler_evo/ -o releases/modeler_evo-<version>.zip v<version> -- . ':!.claude' ':!.gitignore' ':!tools' ':!docs'`
   4. push branch and tag (`git push origin main v<version>`), then create the GitHub release on that
-     tag with the ZIP attached (`gh release create v<version> modeler_evo-<version>.zip`)
+     tag with the ZIP attached (`gh release create v<version> releases/modeler_evo-<version>.zip`)
   5. never move a tag that has already been pushed
 
 ## Maintaining this file
@@ -92,6 +92,7 @@ gui/icons.py         Icons per input/output type, gear wheel, badges, colors (NO
                      CATEGORY_COLORS, ACCENT)
 gui/theme.py         Light / dark canvas palettes
 icons/icon.svg       Plugin icon
+releases/            Local release ZIPs (excluded from the repository by `.gitignore`)
 docs/images/         Screenshots for the READMEs (GitHub only, excluded from the release ZIP)
 metadata.txt         QGIS metadata (version, changelog, license, repository URLs)
 README.md            Public presentation (GitHub, English): keep up to date with the features
