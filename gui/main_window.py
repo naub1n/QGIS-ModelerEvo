@@ -369,6 +369,10 @@ class ModelerWindow(QMainWindow):
             new_param.setName(mu.unique_parameter_name(m, new_param.description(), exclude=name))
         else:
             new_param.setName(name)
+        try:  # input order is stored by name: keep the renamed input at its place
+            order = [c.parameterName() for c in m.orderedParameters()]
+        except AttributeError:
+            order = None
         m.removeModelParameter(name)
         comp.setParameterName(new_param.name())
         comp.setDescription(new_param.name())
@@ -381,7 +385,11 @@ class ModelerWindow(QMainWindow):
                 m.changeParameterName(name, new_param.name())
             except AttributeError:
                 pass
+            # changeParameterName() does not relink the inputs whose parent is the renamed input
+            mu.relink_dependent_parameters(m, name, new_param.name())
             mu.rename_help_key(m, name, new_param.name())
+            if order is not None:
+                m.setParameterOrder([new_param.name() if n == name else n for n in order])
         mu.set_param_help(m, new_param.name(), help_text)
         self.end_change(tr("Edit input"))
 

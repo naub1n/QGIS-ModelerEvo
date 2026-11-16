@@ -126,7 +126,7 @@
         </message>
         <message>
             <location filename="../gui/help_dialog.py" line="51" />
-            <location filename="../gui/main_window.py" line="1131" />
+            <location filename="../gui/main_window.py" line="1139" />
             <source>Model</source>
             <translation>Modèle</translation>
         </message>
@@ -168,7 +168,7 @@
         </message>
         <message>
             <location filename="../gui/items.py" line="168" />
-            <location filename="../gui/main_window.py" line="392" />
+            <location filename="../gui/main_window.py" line="400" />
             <source>Algorithm not found: {0}</source>
             <translation>Algorithme introuvable : {0}</translation>
         </message>
@@ -251,8 +251,8 @@
         </message>
         <message>
             <location filename="../gui/main_window.py" line="187" />
-            <location filename="../gui/main_window.py" line="909" />
-            <location filename="../gui/main_window.py" line="937" />
+            <location filename="../gui/main_window.py" line="917" />
+            <location filename="../gui/main_window.py" line="945" />
             <source>Save</source>
             <translation>Enregistrer</translation>
         </message>
@@ -268,7 +268,7 @@
         </message>
         <message>
             <location filename="../gui/main_window.py" line="190" />
-            <location filename="../gui/main_window.py" line="971" />
+            <location filename="../gui/main_window.py" line="979" />
             <source>Validate model</source>
             <translation>Valider le modèle</translation>
         </message>
@@ -324,7 +324,7 @@
         </message>
         <message>
             <location filename="../gui/main_window.py" line="208" />
-            <location filename="../gui/main_window.py" line="653" />
+            <location filename="../gui/main_window.py" line="661" />
             <source>Delete selection</source>
             <translation>Supprimer la sélection</translation>
         </message>
@@ -335,7 +335,7 @@
         </message>
         <message>
             <location filename="../gui/main_window.py" line="211" />
-            <location filename="../gui/main_window.py" line="671" />
+            <location filename="../gui/main_window.py" line="679" />
             <source>Add group box</source>
             <translation>Ajouter un cadre de groupe</translation>
         </message>
@@ -356,7 +356,7 @@
         </message>
         <message>
             <location filename="../gui/main_window.py" line="216" />
-            <location filename="../gui/main_window.py" line="772" />
+            <location filename="../gui/main_window.py" line="780" />
             <source>Zoom to full extent</source>
             <translation>Zoom sur l'ensemble</translation>
         </message>
@@ -422,7 +422,7 @@
         </message>
         <message>
             <location filename="../gui/main_window.py" line="266" />
-            <location filename="../gui/main_window.py" line="657" />
+            <location filename="../gui/main_window.py" line="665" />
             <location filename="../gui/panels.py" line="329" />
             <source>Group</source>
             <translation>Groupe</translation>
@@ -438,332 +438,332 @@
             <translation>Ajouter une entrée</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="386" />
+            <location filename="../gui/main_window.py" line="394" />
             <source>Edit input</source>
             <translation>Modifier l'entrée</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="397" />
+            <location filename="../gui/main_window.py" line="405" />
             <source>The Processing plugin is required: {0}</source>
             <translation>Le plugin Processing est requis : {0}</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="420" />
+            <location filename="../gui/main_window.py" line="428" />
             <source>Add algorithm</source>
             <translation>Ajouter un algorithme</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="429" />
+            <location filename="../gui/main_window.py" line="437" />
             <source>Algorithm “{0}” is not available.</source>
             <translation>L'algorithme « {0} » n'est pas disponible.</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="449" />
+            <location filename="../gui/main_window.py" line="457" />
             <source>Edit algorithm</source>
             <translation>Modifier l'algorithme</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="481" />
+            <location filename="../gui/main_window.py" line="489" />
             <source>Edit output</source>
             <translation>Modifier la sortie</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="502" />
-            <location filename="../gui/main_window.py" line="749" />
+            <location filename="../gui/main_window.py" line="510" />
+            <location filename="../gui/main_window.py" line="757" />
             <source>Add model output</source>
             <translation>Ajouter une sortie du modèle</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="505" />
+            <location filename="../gui/main_window.py" line="513" />
             <source>This output could not be added to the model.</source>
             <translation>Cette sortie n'a pas pu être ajoutée au modèle.</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="522" />
+            <location filename="../gui/main_window.py" line="530" />
             <source>Invalid parameters: {0}</source>
             <translation>Paramètres invalides : {0}</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="530" />
+            <location filename="../gui/main_window.py" line="538" />
             <source>Activate algorithm</source>
             <translation>Activer l'algorithme</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="530" />
+            <location filename="../gui/main_window.py" line="538" />
             <source>Deactivate algorithm</source>
             <translation>Désactiver l'algorithme</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="565" />
+            <location filename="../gui/main_window.py" line="573" />
             <source>Connect</source>
             <translation>Connecter</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="578" />
+            <location filename="../gui/main_window.py" line="586" />
             <source>Disconnect</source>
             <translation>Déconnecter</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="583" />
+            <location filename="../gui/main_window.py" line="591" />
             <source>Cannot delete “{0}”: algorithms depend on it.</source>
             <translation>Impossible de supprimer « {0} » : des algorithmes en dépendent.</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="594" />
+            <location filename="../gui/main_window.py" line="602" />
             <source>Cannot delete this algorithm: {0} depend(s) on it.</source>
             <translation>Impossible de supprimer cet algorithme : {0} en dépend(ent).</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="626" />
-            <location filename="../gui/main_window.py" line="724" />
-            <location filename="../gui/main_window.py" line="766" />
+            <location filename="../gui/main_window.py" line="634" />
+            <location filename="../gui/main_window.py" line="732" />
+            <location filename="../gui/main_window.py" line="774" />
             <source>Delete</source>
             <translation>Supprimer</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="641" />
+            <location filename="../gui/main_window.py" line="649" />
             <source>Some algorithms were not deleted: other algorithms depend on them.</source>
             <translation>Certains algorithmes n'ont pas été supprimés : d'autres en dépendent.</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="678" />
+            <location filename="../gui/main_window.py" line="686" />
             <source>Group box</source>
             <translation>Cadre de groupe</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="690" />
+            <location filename="../gui/main_window.py" line="698" />
             <source>Title</source>
             <translation>Titre</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="691" />
+            <location filename="../gui/main_window.py" line="699" />
             <source>Color</source>
             <translation>Couleur</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="703" />
+            <location filename="../gui/main_window.py" line="711" />
             <source>Edit group box</source>
             <translation>Modifier le cadre de groupe</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="716" />
+            <location filename="../gui/main_window.py" line="724" />
             <source>Edit comment…</source>
             <translation>Modifier le commentaire…</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="717" />
-            <location filename="../gui/main_window.py" line="730" />
+            <location filename="../gui/main_window.py" line="725" />
+            <location filename="../gui/main_window.py" line="738" />
             <source>Delete comment</source>
             <translation>Supprimer le commentaire</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="723" />
-            <location filename="../gui/main_window.py" line="735" />
-            <location filename="../gui/main_window.py" line="738" />
+            <location filename="../gui/main_window.py" line="731" />
             <location filename="../gui/main_window.py" line="743" />
+            <location filename="../gui/main_window.py" line="746" />
+            <location filename="../gui/main_window.py" line="751" />
             <source>Edit…</source>
             <translation>Modifier…</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="736" />
-            <location filename="../gui/main_window.py" line="740" />
-            <location filename="../gui/main_window.py" line="745" />
+            <location filename="../gui/main_window.py" line="744" />
+            <location filename="../gui/main_window.py" line="748" />
+            <location filename="../gui/main_window.py" line="753" />
             <source>Comment…</source>
             <translation>Commentaire…</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="759" />
+            <location filename="../gui/main_window.py" line="767" />
             <source>Deactivate</source>
             <translation>Désactiver</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="761" />
+            <location filename="../gui/main_window.py" line="769" />
             <source>Activate</source>
             <translation>Activer</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="763" />
+            <location filename="../gui/main_window.py" line="771" />
             <source>View output layers</source>
             <translation>Voir les couches de sortie</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="771" />
+            <location filename="../gui/main_window.py" line="779" />
             <source>Add group box here</source>
             <translation>Ajouter un cadre de groupe ici</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="788" />
+            <location filename="../gui/main_window.py" line="796" />
             <source>Snap to grid</source>
             <translation>Aligner sur la grille</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="797" />
+            <location filename="../gui/main_window.py" line="805" />
             <source>Edit name / group</source>
             <translation>Modifier le nom / groupe</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="803" />
+            <location filename="../gui/main_window.py" line="811" />
             <source>Edit variables</source>
             <translation>Modifier les variables</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="810" />
+            <location filename="../gui/main_window.py" line="818" />
             <source>Edit model help</source>
             <translation>Modifier l'aide du modèle</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="814" />
+            <location filename="../gui/main_window.py" line="822" />
             <source>Reorder model inputs</source>
             <translation>Réordonner les entrées du modèle</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="837" />
+            <location filename="../gui/main_window.py" line="845" />
             <source>Move up</source>
             <translation>Monter</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="837" />
+            <location filename="../gui/main_window.py" line="845" />
             <source>Move down</source>
             <translation>Descendre</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="857" />
+            <location filename="../gui/main_window.py" line="865" />
             <source>Reorder inputs</source>
             <translation>Réordonner les entrées</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="871" />
+            <location filename="../gui/main_window.py" line="879" />
             <source>Model modified</source>
             <translation>Modèle modifié</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="871" />
+            <location filename="../gui/main_window.py" line="879" />
             <source>The model has been modified. Save the changes?</source>
             <translation>Le modèle a été modifié. Enregistrer les modifications ?</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="895" />
-            <location filename="../gui/main_window.py" line="901" />
+            <location filename="../gui/main_window.py" line="903" />
+            <location filename="../gui/main_window.py" line="909" />
             <source>Open model</source>
             <translation>Ouvrir un modèle</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="896" />
-            <location filename="../gui/main_window.py" line="930" />
+            <location filename="../gui/main_window.py" line="904" />
+            <location filename="../gui/main_window.py" line="938" />
             <source>Processing models</source>
             <translation>Modèles Processing</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="901" />
+            <location filename="../gui/main_window.py" line="909" />
             <source>Cannot read the model:
 {0}</source>
             <translation>Impossible de lire le modèle :
 {0}</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="909" />
+            <location filename="../gui/main_window.py" line="917" />
             <source>Please enter a model name (“Model properties” panel).</source>
             <translation>Veuillez indiquer un nom de modèle (panneau « Propriétés du modèle »).</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="929" />
+            <location filename="../gui/main_window.py" line="937" />
             <source>Save model</source>
             <translation>Enregistrer le modèle</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="937" />
+            <location filename="../gui/main_window.py" line="945" />
             <source>Cannot write the file:
 {0}</source>
             <translation>Impossible d'écrire le fichier :
 {0}</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="945" />
+            <location filename="../gui/main_window.py" line="953" />
             <source>Model saved: {0}</source>
             <translation>Modèle enregistré : {0}</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="953" />
+            <location filename="../gui/main_window.py" line="961" />
             <source>The “project models” provider is not available.</source>
             <translation>Le fournisseur « modèles du projet » n'est pas disponible.</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="960" />
+            <location filename="../gui/main_window.py" line="968" />
             <source>Model saved in the project. Remember to save the project.</source>
             <translation>Modèle enregistré dans le projet. Pensez à enregistrer le projet.</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="969" />
+            <location filename="../gui/main_window.py" line="977" />
             <source>The model is valid.</source>
             <translation>Le modèle est valide.</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="972" />
+            <location filename="../gui/main_window.py" line="980" />
             <source>The model is not valid:</source>
             <translation>Le modèle n'est pas valide :</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1008" />
+            <location filename="../gui/main_window.py" line="1016" />
             <source>The model does not contain any algorithm.</source>
             <translation>Le modèle ne contient aucun algorithme.</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1014" />
+            <location filename="../gui/main_window.py" line="1022" />
             <source>Cannot open the execution dialog: {0}</source>
             <translation>Impossible d'ouvrir la fenêtre d'exécution : {0}</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1068" />
+            <location filename="../gui/main_window.py" line="1076" />
             <source>{0} layer(s) added to the project.</source>
             <translation>{0} couche(s) ajoutée(s) au projet.</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1069" />
+            <location filename="../gui/main_window.py" line="1077" />
             <source>No output layer available.</source>
             <translation>Aucune couche de sortie disponible.</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1090" />
+            <location filename="../gui/main_window.py" line="1098" />
             <source>Export as image</source>
             <translation>Exporter en image</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1102" />
+            <location filename="../gui/main_window.py" line="1110" />
             <source>Image exported: {0}</source>
             <translation>Image exportée : {0}</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1105" />
+            <location filename="../gui/main_window.py" line="1113" />
             <source>Export as PDF</source>
             <translation>Exporter en PDF</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1119" />
+            <location filename="../gui/main_window.py" line="1127" />
             <source>PDF exported: {0}</source>
             <translation>PDF exporté : {0}</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1122" />
+            <location filename="../gui/main_window.py" line="1130" />
             <source>Export as SVG</source>
             <translation>Exporter en SVG</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1135" />
+            <location filename="../gui/main_window.py" line="1143" />
             <source>SVG exported: {0}</source>
             <translation>SVG exporté : {0}</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1146" />
+            <location filename="../gui/main_window.py" line="1154" />
             <source>Python export is not available in this QGIS version.</source>
             <translation>Export Python non disponible dans cette version de QGIS.</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1149" />
+            <location filename="../gui/main_window.py" line="1157" />
             <source>Export as Python script</source>
             <translation>Exporter en script Python</translation>
         </message>
         <message>
-            <location filename="../gui/main_window.py" line="1154" />
+            <location filename="../gui/main_window.py" line="1162" />
             <source>Script exported: {0}</source>
             <translation>Script exporté : {0}</translation>
         </message>

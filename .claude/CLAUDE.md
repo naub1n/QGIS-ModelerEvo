@@ -189,6 +189,10 @@ modeler.rst          Documentation of the original modeler (reference, CC BY-SA)
   crashed QGIS when renaming an input). Copy first:
   `c = QgsProcessingModelParameter(); c.loadVariant(model.parameterComponent(name).toVariant())`.
   Same for `model.parameterDefinition(name)`: invalid after `removeModelParameter(name)`
+- Renaming an input (`edit_input`, the name follows the description): `changeParameterName()` only
+  relinks the child algorithms. The plugin also relinks the inputs whose parent is the renamed input
+  (`mu.relink_dependent_parameters`, generic via `dependsOnOtherParameters()` / `toVariantMap()`) and
+  keeps its place in the input order (`setParameterOrder`, the order is stored by name)
 - No dependency outside QGIS; `core/` does not depend on the GUI
 - Custom drawing in `paint()`: any new color must go through the palette
 - The plugin folder is a git repository (`main` branch); `.gitignore` excludes `__pycache__/`, logs

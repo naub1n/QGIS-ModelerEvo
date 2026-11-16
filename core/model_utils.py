@@ -530,6 +530,41 @@ def sync_help(model):
     model.setHelpContent(content)
 
 
+# Keys of toVariantMap() that never hold a reference to another parameter
+_NON_LINK_KEYS = {"name", "description", "help", "default", "default_assigned", "metadata", "flags",
+                  "parameter_type", "type", "class"}
+
+
+def relink_dependent_parameters(model, old_name, new_name):
+    """Point the model inputs that depend on input ``old_name`` to ``new_name``.
+
+    Covers every parameter type with a parent parameter (field / expression / band → parent
+    layer, distance → parent CRS source, table → parent connection…), using the generic
+    ``dependsOnOtherParameters()`` API. ``QgsProcessingModelAlgorithm.changeParameterName()``
+    only relinks the child algorithms, not the other inputs.
+    """
+    if not old_name or old_name == new_name:
+        return
+    # names first: updateModelParameter() deletes the definition being replaced
+    names = [p.name() for p in model.parameterDefinitions()
+             if p.name() != new_name and old_name in (p.dependsOnOtherParameters() or [])]
+    for name in names:
+        param = model.parameterDefinition(name)
+        if param is None:
+            continue
+        variant = dict(param.toVariantMap())
+        changed = False
+        for key, value in variant.items():
+            if key not in _NON_LINK_KEYS and isinstance(value, str) and value == old_name:
+                variant[key] = new_name
+                changed = True
+        if not changed:
+            continue
+        new_def = param.clone()
+        new_def.fromVariantMap(variant)
+        model.updateModelParameter(new_def)  # ownership transferred; `param` is now deleted
+
+
 def unique_parameter_name(model, description, exclude=None):
     base = safe_name(description).lower() or "parameter"
     name, i = base, 2
