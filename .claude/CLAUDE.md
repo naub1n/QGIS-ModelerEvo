@@ -183,6 +183,12 @@ modeler.rst          Documentation of the original modeler (reference, CC BY-SA)
   sources on GitHub (`qgis/QGIS`, master branch) before using a Processing Python module
 - PyQGIS: never chain calls on a temporary C++ object whose pointers are kept (e.g.
   `model.create().parameterDefinitions()` crashed QGIS): keep the object in a variable
+- PyQGIS: `model.parameterComponent(name)` and `model.childAlgorithm(id)` return **references** to
+  the objects stored in the model, not copies. Removing the parameter / child
+  (`removeModelParameter`, `removeChildAlgorithm`) destroys them: any later use crashes QGIS (this
+  crashed QGIS when renaming an input). Copy first:
+  `c = QgsProcessingModelParameter(); c.loadVariant(model.parameterComponent(name).toVariant())`.
+  Same for `model.parameterDefinition(name)`: invalid after `removeModelParameter(name)`
 - No dependency outside QGIS; `core/` does not depend on the GUI
 - Custom drawing in `paint()`: any new color must go through the palette
 - The plugin folder is a git repository (`main` branch); `.gitignore` excludes `__pycache__/`, logs

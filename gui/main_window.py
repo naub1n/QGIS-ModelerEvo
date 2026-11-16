@@ -352,7 +352,10 @@ class ModelerWindow(QMainWindow):
         existing = m.parameterDefinition(name)
         if existing is None:
             return
-        comp = m.parameterComponent(name)
+        # parameterComponent() returns a reference to the object stored in the model, which
+        # removeModelParameter() destroys below: work on an independent copy
+        comp = QgsProcessingModelParameter()
+        comp.loadVariant(m.parameterComponent(name).toVariant())
         old_description = existing.description()
         res = node_dialog.edit_parameter(
             self, m, existing.type(), existing, comp.comment().description(), comp.comment().color(),
