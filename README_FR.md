@@ -4,6 +4,8 @@
 
 Version modernisée du modeleur graphique de Processing pour QGIS.
 
+![ModelerEvo](docs/images/ModelerEvo.png)
+
 Les modèles restent au format `.model3` et sont **100 % compatibles** avec le modeleur d'origine :
 un modèle créé ou modifié avec ModelerEvo s'ouvre dans le modeleur de QGIS, et inversement.
 
