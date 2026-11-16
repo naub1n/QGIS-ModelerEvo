@@ -65,6 +65,13 @@ Les anomalies et suggestions sont à déposer dans les
 - Dans la boîte à outils Processing : clic droit sur un modèle → **Éditer avec ModelerEvo…**
   (QGIS 3, et QGIS ≥ 4.4)
 
+## Utilisation de l'IA
+
+Ce plugin a été réalisé avec l'aide d'une intelligence artificielle :
+[Claude Code](https://claude.com/claude-code) (Anthropic) a servi d'assistant pour écrire le code et la
+documentation. La conception, les spécifications, les choix fonctionnels et les tests dans QGIS sont
+le fait de l'auteur.
+
 ## Licence
 
 Distribué sous licence [GNU GPL v3.0](LICENSE) ou ultérieure.
