@@ -12,8 +12,15 @@ sont à respecter.
 - Dépôt GitHub : https://github.com/naub1n/QGIS-ModelerEvo ; à chaque nouvelle version, mettre à jour
   `version` et `changelog` dans `metadata.txt`
 - Les utilisateurs installent le plugin depuis le ZIP versionné publié dans les releases GitHub (dossier
-  racine `modeler_evo/`, sans `.claude/` ni `.gitignore`), par ex. :
-  `git archive --prefix=modeler_evo/ -o modeler_evo-<version>.zip HEAD -- . ':!.claude' ':!.gitignore'`
+  racine `modeler_evo/`, sans `.claude/` ni `.gitignore`)
+- Publier une version :
+  1. mettre à jour `version` et `changelog` dans `metadata.txt`, committer
+  2. poser un tag annoté `v<version>` (identique à `version` de `metadata.txt`) sur ce commit :
+     `git tag -a v<version> -m "ModelerEvo <version>"`
+  3. construire le ZIP **depuis le tag** :
+     `git archive --prefix=modeler_evo/ -o modeler_evo-<version>.zip v<version> -- . ':!.claude' ':!.gitignore'`
+  4. pousser branche et tag (`git push origin main v<version>`), puis créer la release GitHub sur ce tag
+     avec le ZIP en pièce jointe (`gh release create v<version> modeler_evo-<version>.zip`)
 
 ## Maintenance de ce fichier
 
